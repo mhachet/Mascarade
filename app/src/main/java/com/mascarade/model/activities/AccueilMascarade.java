@@ -2,11 +2,13 @@ package com.mascarade.model.activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.mascarade.R;
 import com.mascarade.model.cards.Eveque;
@@ -22,9 +24,17 @@ public class AccueilMascarade extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_accueil_mascarade);
 
+        TextView mascaradeTittle = (TextView)findViewById(R.id.title_mascarade);
+        //Typeface font = Typeface.createFromAsset(this.getAssets(), "fonts/ancient-german-gothic.otf");
+        //mascaradeTittle.setTypeface(font);
         //layout = (RelativeLayout) RelativeLayout.inflate(this, R.layout.activity_accueil_mascarade, null);
         Button play = (Button)findViewById(R.id.button_jouer);
+        //play.setTypeface(font);
         play.setOnClickListener(new ButtonOnClickListener(play));
+
+        Button rulesButton = (Button)findViewById(R.id.button_rules);
+        //rulesButton.setTypeface(font);
+
     }
     public void evequePower(Bank bank) {
         Player playerEveque = bank.getPlayerWithCard("Eveque");

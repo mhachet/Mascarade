@@ -6,14 +6,6 @@
     tools:context=".activities.AccueilMascarade"
     android:background="@android:drawable/dark_header">
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="JOUER"
-        android:id="@+id/button_jouer"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
-
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -26,13 +18,52 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
-    <Button
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Règles"
-        android:id="@+id/button_rules"
-        android:layout_below="@+id/button_jouer"
+        android:id="@+id/linearLayout"
+        android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="54dp" />
+        android:layout_marginLeft="100dp"
+        android:layout_marginRight="100dp">
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Jouer"
+            android:id="@+id/button_jouer"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:textSize="25dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="100dp"
+            android:layout_marginBottom="20dp"
+            android:clickable="false"
+            android:capitalize="none" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Regles"
+            android:id="@+id/button_rules"
+            android:textSize="25dp"
+            android:layout_below="@+id/linearLayout"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp"
+            android:capitalize="none" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Quitter"
+            android:id="@+id/button_leave"
+            android:textSize="25dp"
+            android:layout_below="@+id/linearLayout"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp"
+            android:layout_gravity="center_horizontal" />
+
+    </LinearLayout>
 
 </RelativeLayout>

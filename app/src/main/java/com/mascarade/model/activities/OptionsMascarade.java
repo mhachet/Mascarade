@@ -2,6 +2,7 @@ package com.mascarade.model.activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -9,8 +10,11 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.mascarade.R;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +30,12 @@ public class OptionsMascarade extends Activity {
         super.onCreate(savedInstanceState);
         Log.d(OPTIONS, "Start options");
         setContentView(R.layout.activity_options_mascarade);
+
+        Typeface font = Typeface.createFromAsset(this.getAssets(), "fonts/cloister-black-light-light.ttf");
+        TextView tittleMascarade = (TextView)findViewById(R.id.mascarade_options_title);
+        tittleMascarade.setTypeface(font);
+
+
         this.createSpinnerNbPlayers();
 
         Button start = (Button)findViewById(R.id.button_start);
