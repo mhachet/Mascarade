@@ -70,21 +70,42 @@ public class PlateauMascarade extends Activity {
         List<Card> cardArrayListInGame = bank.getBankCardsListStart();
         List listTypeCards = new ArrayList<>();
         //listTypeCards.add(imageView);
-
+        ArrayList<ListItem> myList = new ArrayList<>();
         ListView listViewCardsLabel = (ListView) findViewById(R.id.listView_roles_game);
         //Log.d(PLATEAU, "image id : " + R.drawable.roi_label + "  " + R.drawable.juge_label + " " + R.drawable.reine_label + " " + R.drawable.eveque_label);
+
+        String [] names = new String[cardArrayListInGame.size()];
+        int[] images = new int [cardArrayListInGame.size()];
+        boolean paysan = false;
         for(int i = 0 ; i < cardArrayListInGame.size(); i++){
             Card card = cardArrayListInGame.get(i);
             String cardType = cardArrayListInGame.get(i).getTypeCard();
 
+            int idImage =this.getIdImageFromCard(card);
+
+            if(idImage == 2130837584 && paysan == false) {
+                names[i] = cardType;
+                images[i] = idImage;
+                paysan = true;
+            }
+            else if(idImage != 2130837584){
+                names[i] = cardType;
+                images[i] = idImage;
+            }
+            
+            Log.d(PLATEAU, "id : " + images[i] + " -- " + cardType.toLowerCase() + "_label");
+            ListItem item = new ListItem(images[i], names[i]);
+            item.setImageId(images[i]);
+            item.setNameImage(names[i]);
+            myList.add(item);
         }
 
-        int[] images = { R.drawable.roi_label, R.drawable.juge_label,
-                R.drawable.reine_label, R.drawable.eveque_label };
+        //int[] images = { R.drawable.roi_label, R.drawable.juge_label,
+                //R.drawable.reine_label, R.drawable.eveque_label };
 
-        String [] names = {"Roi", "Juge", "Reine", "Eveque"};
-        ArrayList<ListItem> myList = new ArrayList<>();
+        //String [] names = {"Roi", "Juge", "Reine", "Eveque"};
 
+/*
         for (int i = 0; i < images.length; i++) {
             ListItem item = new ListItem(images[i], names[i]);
             item.setImageId(images[i]);
@@ -92,7 +113,7 @@ public class PlateauMascarade extends Activity {
             Log.d(PLATEAU, names[i] + " => id : " + images[i]);
             myList.add(item);
         }
-
+*/
         RolesAdapter adapter = new RolesAdapter(this, myList);
         listViewCardsLabel.setAdapter(adapter);
         listViewCardsLabel.setOnItemClickListener(adapter);
@@ -101,6 +122,51 @@ public class PlateauMascarade extends Activity {
 
     }
 
+    public int getIdImageFromCard(Card card){
+
+        String cardType = card.getTypeCard();
+
+        int idImage = 0;
+
+        if(cardType.equals("Juge")) {
+            idImage = R.drawable.juge_label;
+        }
+        else if(cardType.equals("Espionne")) {
+            idImage = R.drawable.espionne_label;
+        }
+        else if(cardType.equals("Eveque")) {
+            idImage = R.drawable.eveque_label;
+        }
+        else if(cardType.equals("Fou")) {
+            idImage = R.drawable.fou_label;
+        }
+        else if(cardType.equals("Inquisiteur")) {
+            idImage = R.drawable.inquisiteur_label;
+        }
+        else if(cardType.equals("Paysan")) {
+            idImage = R.drawable.paysans_label;
+        }
+        else if(cardType.equals("Reine")) {
+            idImage = R.drawable.reine_label;
+        }
+        else if(cardType.equals("Roi")) {
+            idImage = R.drawable.roi_label;
+        }
+        else if(cardType.equals("Sorciere")) {
+            idImage = R.drawable.sorciere_label;
+        }
+        else if(cardType.equals("Tricheur")) {
+            idImage = R.drawable.tricheur_label;
+        }
+        else if(cardType.equals("Veuve")) {
+            idImage = R.drawable.veuve_label;
+        }
+        else if(cardType.equals("Voleur")) {
+            idImage = R.drawable.voleur_label;
+        }
+
+        return idImage;
+    }
 
     public void fouPower(Bank game) {
         boolean changeCards = true;

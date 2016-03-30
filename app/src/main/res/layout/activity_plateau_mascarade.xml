@@ -1,21 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <LinearLayout
+        android:layout_column="1"
         android:orientation="vertical"
-        android:layout_width="104dp"
-        android:layout_height="328dp"
+        android:layout_width="166dp"
+        android:layout_height="wrap_content"
         android:id="@+id/linearLayout_roles_actions"
         android:layout_gravity="bottom"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:background="#e1dbdb">
 
+
+
         <LinearLayout
             android:orientation="vertical"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="164dp"
             android:id="@+id/linearLayout_bloc_roles"
             android:layout_marginBottom="5dp"
@@ -35,7 +38,7 @@
 
             <ListView
                 android:layout_height="match_parent"
-                android:layout_width="match_parent"
+                android:layout_width="145dp"
                 android:divider="@android:color/transparent"
                 android:dividerHeight="0sp"
                 android:id="@+id/listView_roles_game"
@@ -45,7 +48,7 @@
 
         <LinearLayout
             android:orientation="vertical"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="fill_vertical"
             android:id="@+id/linearLayout_bloc_actions"
@@ -119,4 +122,98 @@
         </LinearLayout>
 
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_column="3"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="81dp"
+        android:id="@+id/linearLayout_informations"
+        android:gravity="right"
+        android:weightSum="1"
+        android:layout_marginTop="0dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:paddingRight="5dp"
+        android:paddingLeft="5dp">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#000000"
+            android:paddingRight="0dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tour n° : "
+                android:id="@+id/textView_label_round"
+                android:layout_gravity="left"
+                android:textColor="#ffffff"
+                android:paddingBottom="5dp"
+                android:paddingRight="0dp"
+                android:paddingLeft="10dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView_round"
+                android:paddingBottom="5dp"
+                android:textColor="#FFFFFF" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#000000">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Votre dernier rôle connu : "
+                android:id="@+id/textView_label_last_role_known"
+                android:textColor="#ffffff"
+                android:layout_gravity="left"
+                android:paddingBottom="5dp"
+                android:paddingLeft="10dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dp"
+                android:id="@+id/textView_last_role_known"
+                android:textColor="#FFFFFF" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#000000"
+            android:weightSum="1"
+            android:paddingBottom="5dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Or  : "
+                android:id="@+id/textView_label_gold"
+                android:textColor="#ffffff"
+                android:layout_gravity="left"
+                android:paddingLeft="10dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:id="@+id/textView_gold"
+                android:textColor="#FFFFFF" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
 </LinearLayout>
