@@ -61,7 +61,7 @@ public class RolesAdapter extends BaseAdapter implements AdapterView.OnItemClick
         // au premier appel ConvertView est null, on inflate notre layout
         if (convertView == null) {
 
-            Log.d(ADAPTER_ROLES, "convert is null");
+            //Log.d(ADAPTER_ROLES, "convert is null");
             LayoutInflater mInflater = (LayoutInflater) rolesContext
                     .getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
 
@@ -74,7 +74,7 @@ public class RolesAdapter extends BaseAdapter implements AdapterView.OnItemClick
             // nous attribuons comme tag notre MyViewHolder à convertView
             convertView.setTag(mViewHolder);
         } else {
-            Log.d(ADAPTER_ROLES, "convert is not null");
+            //Log.d(ADAPTER_ROLES, "convert is not null");
 
             // convertView n'est pas null, nous récupérons notre objet MyViewHolder
             // et évitons ainsi de devoir retrouver les vues à chaque appel de getView
@@ -83,7 +83,7 @@ public class RolesAdapter extends BaseAdapter implements AdapterView.OnItemClick
 
         // nous récupérons l'item de la liste demandé par getView
         ListItem listItem = this.getItem(position);
-        Log.d(ADAPTER_ROLES, "listItem : " + listItem.getNameImage() + "  id : " + listItem.getImageId());
+        //Log.d(ADAPTER_ROLES, "listItem : " + listItem.getNameImage() + "  id : " + listItem.getImageId());
         mViewHolder.imageView.setImageResource(listItem.getImageId());
 
         // nous retournos la vue de l'item demandé

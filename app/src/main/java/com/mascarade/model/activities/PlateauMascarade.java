@@ -1,22 +1,21 @@
 package com.mascarade.model.activities;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.RectF;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 import com.mascarade.R;
+import com.mascarade.design.Board;
+import com.mascarade.design.PlayerDesign;
 import com.mascarade.model.adapter.ListItem;
 import com.mascarade.model.adapter.RolesAdapter;
 import com.mascarade.model.cards.Card;
@@ -26,8 +25,7 @@ import com.mascarade.model.game.Bank;
 import com.mascarade.model.game.Player;
 import com.mascarade.model.game.Tribunal;
 
-import java.io.File;
-import java.lang.reflect.Field;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -58,21 +56,43 @@ public class PlateauMascarade extends Activity {
 
         Tribunal tribunal = new Tribunal(newGame.getBankCardsListStart());
         this.drawRolesInGame(newGame);
+        Board board = new Board(this);
+        RelativeLayout boardView = (RelativeLayout)findViewById(R.id.view_board);
+        boardView.addView(board);
 
-        //boolean exchange = true;
-        //this.espionnePower(newGame, exchange);
-        //this.evequePower(newGame);
-        //this.fouPower(newGame);
+        this.drawPlayersInGame(newGame);
 
+
+    }
+
+    public void drawPlayersInGame(Bank bank){
+        ArrayList<Player> playerArrayList = bank.getListPlayers();
+        ArrayList<ListItem> myList = new ArrayList<>();
+        ListView listViewPlayersDesign = (ListView) findViewById(R.id.listView_players);
+
+        String [] names = new String[playerArrayList.size()];
+        int[] images = new int [playerArrayList.size()];
+
+        for(int i = 0 ; i < playerArrayList.size() ; i++){
+            Player player = playerArrayList.get(i);
+            int idImage = this.getIdImageFromPlayer(player);
+            names[i] = "player n° " + i;
+            images[i] = idImage;
+            ListItem item = new ListItem(images[i], names[i]);
+            item.setImageId(images[i]);
+            item.setNameImage(names[i]);
+            myList.add(item);
+        }
+
+        RolesAdapter adapter = new RolesAdapter(this, myList);
+        listViewPlayersDesign.setAdapter(adapter);
+        listViewPlayersDesign.setOnItemClickListener(adapter);
     }
 
     public void drawRolesInGame(Bank bank){
         List<Card> cardArrayListInGame = bank.getBankCardsListStart();
-        List listTypeCards = new ArrayList<>();
-        //listTypeCards.add(imageView);
         ArrayList<ListItem> myList = new ArrayList<>();
         ListView listViewCardsLabel = (ListView) findViewById(R.id.listView_roles_game);
-        //Log.d(PLATEAU, "image id : " + R.drawable.roi_label + "  " + R.drawable.juge_label + " " + R.drawable.reine_label + " " + R.drawable.eveque_label);
 
         String [] names = new String[cardArrayListInGame.size()];
         int[] images = new int [cardArrayListInGame.size()];
@@ -92,34 +112,17 @@ public class PlateauMascarade extends Activity {
                 names[i] = cardType;
                 images[i] = idImage;
             }
-            
-            Log.d(PLATEAU, "id : " + images[i] + " -- " + cardType.toLowerCase() + "_label");
+
+            //Log.d(PLATEAU, "id : " + images[i] + " -- " + cardType.toLowerCase() + "_label");
             ListItem item = new ListItem(images[i], names[i]);
             item.setImageId(images[i]);
             item.setNameImage(names[i]);
             myList.add(item);
         }
 
-        //int[] images = { R.drawable.roi_label, R.drawable.juge_label,
-                //R.drawable.reine_label, R.drawable.eveque_label };
-
-        //String [] names = {"Roi", "Juge", "Reine", "Eveque"};
-
-/*
-        for (int i = 0; i < images.length; i++) {
-            ListItem item = new ListItem(images[i], names[i]);
-            item.setImageId(images[i]);
-            item.setNameImage(names[i]);
-            Log.d(PLATEAU, names[i] + " => id : " + images[i]);
-            myList.add(item);
-        }
-*/
         RolesAdapter adapter = new RolesAdapter(this, myList);
         listViewCardsLabel.setAdapter(adapter);
         listViewCardsLabel.setOnItemClickListener(adapter);
-
-
-
     }
 
     public int getIdImageFromCard(Card card){
@@ -163,6 +166,52 @@ public class PlateauMascarade extends Activity {
         }
         else if(cardType.equals("Voleur")) {
             idImage = R.drawable.voleur_label;
+        }
+
+        return idImage;
+    }
+
+    public int getIdImageFromPlayer(Player player){
+        int nbPlayer = player.getId();
+        int idImage = 0;
+        if(nbPlayer == 0){
+            idImage = R.drawable.mask_1;
+        }
+        else if(nbPlayer == 1){
+            idImage = R.drawable.mask_2;
+        }
+        else if(nbPlayer == 2){
+            idImage = R.drawable.mask_3;
+        }
+        else if(nbPlayer == 3){
+            idImage = R.drawable.mask_4;
+        }
+        else if(nbPlayer == 4){
+            idImage = R.drawable.mask_5;
+        }
+        else if(nbPlayer == 5){
+            idImage = R.drawable.mask_6;
+        }
+        else if(nbPlayer == 6){
+            idImage = R.drawable.mask_7;
+        }
+        else if(nbPlayer == 7){
+            idImage = R.drawable.mask_8;
+        }
+        else if(nbPlayer == 8){
+            idImage = R.drawable.mask_9;
+        }
+        else if(nbPlayer == 9){
+            idImage = R.drawable.mask_10;
+        }
+        else if(nbPlayer == 10){
+            idImage = R.drawable.mask_11;
+        }
+        else if(nbPlayer == 11){
+            idImage = R.drawable.mask_12;
+        }
+        else if(nbPlayer == 12){
+            idImage = R.drawable.mask_13;
         }
 
         return idImage;
