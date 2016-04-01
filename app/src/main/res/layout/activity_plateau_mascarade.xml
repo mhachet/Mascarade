@@ -195,12 +195,15 @@
             </LinearLayout>
 
             <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:orientation="horizontal"
                 android:background="#000000"
                 android:weightSum="1"
                 android:paddingBottom="5dp">
+                <!--android:layout_width="match_parent"-->
+
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -222,22 +225,30 @@
 
         </LinearLayout>
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/view_board"
-            android:background="#d58efb" >
+            android:background="#d58efb"
+            android:orientation="vertical"
+            android:weightSum="1">
 
-            <ListView
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_width="145dp"
-                android:divider="@android:color/transparent"
-                android:dividerHeight="0sp"
-                android:id="@+id/listView_players"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
-        </RelativeLayout>
-    </LinearLayout>
+                android:layout_weight="0.5"
+                android:gravity="center_vertical|center_horizontal"
+                android:id="@+id/linearLayout_firstLine">
+            </LinearLayout>
 
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:gravity="center_vertical|center_horizontal"
+                android:id="@+id/linearLayout_secondLine"/>
+            </LinearLayout>
+        </LinearLayout>
 </LinearLayout>

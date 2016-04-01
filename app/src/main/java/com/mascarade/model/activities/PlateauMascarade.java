@@ -2,20 +2,14 @@ package com.mascarade.model.activities;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.RectF;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.mascarade.R;
-import com.mascarade.design.Board;
-import com.mascarade.design.PlayerDesign;
 import com.mascarade.model.adapter.ListItem;
 import com.mascarade.model.adapter.RolesAdapter;
 import com.mascarade.model.cards.Card;
@@ -25,7 +19,6 @@ import com.mascarade.model.game.Bank;
 import com.mascarade.model.game.Player;
 import com.mascarade.model.game.Tribunal;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -56,9 +49,9 @@ public class PlateauMascarade extends Activity {
 
         Tribunal tribunal = new Tribunal(newGame.getBankCardsListStart());
         this.drawRolesInGame(newGame);
-        Board board = new Board(this);
-        RelativeLayout boardView = (RelativeLayout)findViewById(R.id.view_board);
-        boardView.addView(board);
+        //Board board = new Board(this);
+        //RelativeLayout boardView = (RelativeLayout)findViewById(R.id.view_board);
+        //boardView.addView(board);
 
         this.drawPlayersInGame(newGame);
 
@@ -66,28 +59,69 @@ public class PlateauMascarade extends Activity {
     }
 
     public void drawPlayersInGame(Bank bank){
+
+        LinearLayout linearLayout = null;
+
         ArrayList<Player> playerArrayList = bank.getListPlayers();
-        ArrayList<ListItem> myList = new ArrayList<>();
-        ListView listViewPlayersDesign = (ListView) findViewById(R.id.listView_players);
 
         String [] names = new String[playerArrayList.size()];
         int[] images = new int [playerArrayList.size()];
+        double nbPlayers = bank.getNbPlayers();
 
-        for(int i = 0 ; i < playerArrayList.size() ; i++){
+        int nbCol = (int)Math.round(nbPlayers / 2);
+
+        for(int i = 0 ; i < nbCol ; i++){
+            ImageView imageView = new ImageView(this);
+            TextView textView = new TextView(this);
+
             Player player = playerArrayList.get(i);
             int idImage = this.getIdImageFromPlayer(player);
             names[i] = "player n° " + i;
+            textView.setText("n°" + i);
             images[i] = idImage;
-            ListItem item = new ListItem(images[i], names[i]);
-            item.setImageId(images[i]);
-            item.setNameImage(names[i]);
-            myList.add(item);
+
+            imageView.setImageResource(images[i]);
+
+            Log.d(PLATEAU, " i first Line : " + i);
+            imageView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1));
+            linearLayout = (LinearLayout) findViewById(R.id.linearLayout_firstLine);
+            linearLayout.setWeightSum(nbCol);
+            linearLayout.addView(textView);
+            linearLayout.addView(imageView);
         }
 
+        for(int j = (int)nbPlayers - 1 ; j >= nbCol ; j--) {
+            ImageView imageView = new ImageView(this);
+            TextView textView = new TextView(this);
+
+            Player player = playerArrayList.get(j);
+            int idImage = this.getIdImageFromPlayer(player);
+            names[j] = "player n° " + j;
+            textView.setText("n°" + j);
+            images[j] = idImage;
+
+            imageView.setImageResource(images[j]);
+
+            Log.d(PLATEAU, "j second line : " + j);
+            imageView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1));
+            linearLayout = (LinearLayout) findViewById(R.id.linearLayout_secondLine);
+            linearLayout.setWeightSum(nbCol);
+            linearLayout.addView(textView);
+            linearLayout.addView(imageView);
+        }
+
+            //ListItem item = new ListItem(images[i], names[i]);
+
+
+
+        /*
         RolesAdapter adapter = new RolesAdapter(this, myList);
         listViewPlayersDesign.setAdapter(adapter);
         listViewPlayersDesign.setOnItemClickListener(adapter);
+        */
     }
+
+
 
     public void drawRolesInGame(Bank bank){
         List<Card> cardArrayListInGame = bank.getBankCardsListStart();
