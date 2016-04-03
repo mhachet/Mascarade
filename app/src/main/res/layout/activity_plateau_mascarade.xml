@@ -108,7 +108,9 @@
                     android:textSize="10dp"
                     android:gravity="fill_vertical"
                     android:textAlignment="center"
-                    android:layout_marginBottom="5dp" />
+                    android:layout_marginBottom="5dp"
+                    android:clickable="false"
+                    android:enabled="false" />
 
                 <Button
                     android:layout_width="match_parent"
@@ -147,7 +149,7 @@
 
             <LinearLayout
                 android:orientation="vertical"
-                android:layout_width="369dp"
+                android:layout_width="345dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/linearLayout_informations"
                 android:gravity="right"
@@ -246,17 +248,38 @@
 
             </LinearLayout>
 
-            <Button
+            <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:text="Quitter"
-                android:background="@drawable/button_leave"
-                android:id="@+id/button_leave"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp" />
+                android:layout_height="match_parent"
+                android:weightSum="1"
+                android:id="@+id/linearLayout_buttons_leave_start">
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Quitter"
+                    android:layout_weight="0.5"
+                    android:background="@drawable/button_leave"
+                    android:id="@+id/button_leave"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="5dp" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Commencer"
+                    android:layout_weight="0.5"
+                    android:background="@drawable/button_leave"
+                    android:id="@+id/button_start"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="5dp" />
+            </LinearLayout>
+
         </LinearLayout>
 
         <LinearLayout

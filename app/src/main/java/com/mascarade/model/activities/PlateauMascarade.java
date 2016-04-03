@@ -29,16 +29,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import static android.graphics.Color.WHITE;
-
-
 public class PlateauMascarade extends Activity {
 
     private static final String PLATEAU = "PLATEAU";
-    private String pseudo = "";
-    private  int nbPlayers = 0;
-
-
+    private Tribunal tribunal = null;
+    private Bank newGame = null;
+    private boolean gameIsLaunch = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,33 +45,70 @@ public class PlateauMascarade extends Activity {
         Button leaveButton = (Button)findViewById(R.id.button_leave);
         leaveButton.setOnClickListener(new ButtonLeaveOnClickListener(leaveButton));
 
-        Intent plateau = getIntent();
-        int nbPlayers = Integer.parseInt(plateau.getStringExtra("nbPlayers"));
-        String pseudo = plateau.getStringExtra("pseudo");
-        Bank newGame = new Bank(nbPlayers);
-        newGame.initialiseCardsBank();
-        newGame.initialiseNbPlayers(pseudo);
+        Button startButton = (Button)findViewById(R.id.button_start);
+        startButton.setOnClickListener(new ButtonStartGameOnClickListener(startButton));
 
-        newGame.distributionCards();
+        Button announceCardButton = (Button)findViewById(R.id.button_announceCard);
+        announceCardButton.setClickable(false);
+        announceCardButton.setEnabled(false);
 
-        Tribunal tribunal = new Tribunal(newGame.getBankCardsListStart());
-
-        this.drawRolesInGame(newGame);
-
-        this.drawPlayersInGame(newGame);
-
-        this.setVariablesOnBoard(newGame);
+        Button seeCardButton = (Button)findViewById(R.id.button_seeCard);
+        seeCardButton.setClickable(false);
+        seeCardButton.setEnabled(false);
 
     }
     class ButtonLeaveOnClickListener implements View.OnClickListener{
         private final Button button;
+
         ButtonLeaveOnClickListener(Button button) {
+
             this.button = button;
         }
-        @Override public void onClick(View v) {
+        @Override
+        public void onClick(View v) {
             Intent leaveGame = new Intent(PlateauMascarade.this, AccueilMascarade.class);
             startActivity(leaveGame);
         }
+    }
+
+    class ButtonStartGameOnClickListener implements View.OnClickListener{
+        private final Button button;
+
+        ButtonStartGameOnClickListener(Button button){
+            this.button = button;
+        }
+
+        @Override
+        public void onClick(View view){
+
+            if(!gameIsLaunch) {
+                Intent plateau = getIntent();
+
+                int nbPlayers = Integer.parseInt(plateau.getStringExtra("nbPlayers"));
+                String pseudo = plateau.getStringExtra("pseudo");
+                newGame = new Bank(nbPlayers);
+                newGame.initialiseCardsBank();
+                newGame.initialiseNbPlayers(pseudo);
+
+                newGame.distributionCards();
+
+                tribunal = new Tribunal(newGame.getBankCardsListStart());
+
+                drawRolesInGame(newGame);
+
+                drawPlayersInGame(newGame);
+
+                setVariablesOnBoard(newGame);
+
+                this.button.setClickable(false);
+            }
+            else{
+                Intent reloadGame = new Intent(PlateauMascarade.this, PlateauMascarade.this);
+                startActivity(reloadGame);
+            }
+
+        }
+
     }
 
     public void setVariablesOnBoard(Bank bank){
