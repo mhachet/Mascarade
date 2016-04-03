@@ -84,8 +84,9 @@ public class RolesAdapter extends BaseAdapter implements AdapterView.OnItemClick
         // nous récupérons l'item de la liste demandé par getView
         ListItem listItem = this.getItem(position);
         //Log.d(ADAPTER_ROLES, "listItem : " + listItem.getNameImage() + "  id : " + listItem.getImageId());
-        mViewHolder.imageView.setImageResource(listItem.getImageId());
 
+        mViewHolder.imageView.setImageResource(listItem.getImageId());
+        convertView.setBackgroundColor(0xFFFFFF);
         // nous retournos la vue de l'item demandé
         return convertView;
     }

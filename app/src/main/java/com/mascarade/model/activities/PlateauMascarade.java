@@ -2,8 +2,12 @@ package com.mascarade.model.activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -19,9 +23,13 @@ import com.mascarade.model.game.Bank;
 import com.mascarade.model.game.Player;
 import com.mascarade.model.game.Tribunal;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import static android.graphics.Color.WHITE;
 
 
 public class PlateauMascarade extends Activity {
@@ -38,24 +46,52 @@ public class PlateauMascarade extends Activity {
 
         setContentView(R.layout.activity_plateau_mascarade);
 
+        Button leaveButton = (Button)findViewById(R.id.button_leave);
+        leaveButton.setOnClickListener(new ButtonLeaveOnClickListener(leaveButton));
+
         Intent plateau = getIntent();
         int nbPlayers = Integer.parseInt(plateau.getStringExtra("nbPlayers"));
         String pseudo = plateau.getStringExtra("pseudo");
         Bank newGame = new Bank(nbPlayers);
         newGame.initialiseCardsBank();
-        newGame.initialiseNbPlayers();
+        newGame.initialiseNbPlayers(pseudo);
 
         newGame.distributionCards();
 
         Tribunal tribunal = new Tribunal(newGame.getBankCardsListStart());
+
         this.drawRolesInGame(newGame);
-        //Board board = new Board(this);
-        //RelativeLayout boardView = (RelativeLayout)findViewById(R.id.view_board);
-        //boardView.addView(board);
 
         this.drawPlayersInGame(newGame);
 
+        this.setVariablesOnBoard(newGame);
 
+    }
+    class ButtonLeaveOnClickListener implements View.OnClickListener{
+        private final Button button;
+        ButtonLeaveOnClickListener(Button button) {
+            this.button = button;
+        }
+        @Override public void onClick(View v) {
+            Intent leaveGame = new Intent(PlateauMascarade.this, AccueilMascarade.class);
+            startActivity(leaveGame);
+        }
+    }
+
+    public void setVariablesOnBoard(Bank bank){
+        Player mainPlayer = bank.getMainPlayer();
+
+        TextView textView_gold_player = (TextView)findViewById(R.id.textView_gold);
+        int nbMoney_player = mainPlayer.getNbMoney();
+        textView_gold_player.setText(Integer.toString(nbMoney_player));
+
+        TextView textView_lastRoleKnown = (TextView)findViewById(R.id.textView_last_role_known);
+        String lastRoleKnown = mainPlayer.getLastCardKnown();
+        textView_lastRoleKnown.setText(lastRoleKnown);
+
+        TextView textView_countRound = (TextView)findViewById(R.id.textView_round);
+        int countRound = bank.getCountRound();
+        textView_countRound.setText(Integer.toString(countRound));
     }
 
     public void drawPlayersInGame(Bank bank){
@@ -64,54 +100,92 @@ public class PlateauMascarade extends Activity {
 
         ArrayList<Player> playerArrayList = bank.getListPlayers();
 
-        String [] names = new String[playerArrayList.size()];
-        int[] images = new int [playerArrayList.size()];
         double nbPlayers = bank.getNbPlayers();
 
         int nbCol = (int)Math.round(nbPlayers / 2);
 
+        LinearLayout.LayoutParams linear = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT, (1/(float)nbCol));
+
         for(int i = 0 ; i < nbCol ; i++){
-            ImageView imageView = new ImageView(this);
-            TextView textView = new TextView(this);
+            LinearLayout linearLayoutPlayer_vertical = new LinearLayout(this);
+
+            linearLayoutPlayer_vertical.setLayoutParams(linear);
+            linearLayoutPlayer_vertical.setOrientation(LinearLayout.VERTICAL);
+            linearLayoutPlayer_vertical.setGravity(Gravity.CENTER);
 
             Player player = playerArrayList.get(i);
             int idImage = this.getIdImageFromPlayer(player);
-            names[i] = "player n° " + i;
-            textView.setText("n°" + i);
-            images[i] = idImage;
 
-            imageView.setImageResource(images[i]);
+            String playerName = player.getName();
 
-            Log.d(PLATEAU, " i first Line : " + i);
-            imageView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1));
+            TextView nbMoneyView = new TextView(this);
+            nbMoneyView.setGravity(Gravity.CENTER);
+            nbMoneyView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT));
+            nbMoneyView.setBackgroundResource(R.drawable.gold_coin);
+            nbMoneyView.setText(Integer.toString(player.getNbMoney()));
+
+            TextView textView = new TextView(this);
+            textView.setText(playerName);
+            textView.setLayoutParams(linear);
+
+            ImageView imageView = new ImageView(this);
+            imageView.setImageResource(idImage);
+            imageView.setLayoutParams(linear);
+
+
+
+            imageView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT));//, 1/nbCol
             linearLayout = (LinearLayout) findViewById(R.id.linearLayout_firstLine);
-            linearLayout.setWeightSum(nbCol);
-            linearLayout.addView(textView);
-            linearLayout.addView(imageView);
+            linearLayout.setWeightSum(1);
+
+            linearLayoutPlayer_vertical.addView(textView);
+            linearLayoutPlayer_vertical.addView(imageView);
+            linearLayoutPlayer_vertical.addView(nbMoneyView);
+            linearLayout.addView(linearLayoutPlayer_vertical);
         }
 
         for(int j = (int)nbPlayers - 1 ; j >= nbCol ; j--) {
-            ImageView imageView = new ImageView(this);
-            TextView textView = new TextView(this);
+
+            LinearLayout linearLayoutPlayer_vertical = new LinearLayout(this);
+
+            linearLayoutPlayer_vertical.setLayoutParams(linear);
+            linearLayoutPlayer_vertical.setOrientation(LinearLayout.VERTICAL);
+            linearLayoutPlayer_vertical.setGravity(Gravity.CENTER);
 
             Player player = playerArrayList.get(j);
+
+            String namePlayer = player.getName();
+
+            TextView textView = new TextView(this);
+            textView.setText(namePlayer);
+            textView.setLayoutParams(linear);
+
+            TextView nbMoneyView = new TextView(this);
+            nbMoneyView.setGravity(Gravity.CENTER);
+            nbMoneyView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT));
+            nbMoneyView.setBackgroundResource(R.drawable.gold_coin);
+            nbMoneyView.setText(Integer.toString(player.getNbMoney()));
+
             int idImage = this.getIdImageFromPlayer(player);
-            names[j] = "player n° " + j;
-            textView.setText("n°" + j);
-            images[j] = idImage;
 
-            imageView.setImageResource(images[j]);
+            ImageView imageView = new ImageView(this);
+            imageView.setImageResource(idImage);
+            imageView.setLayoutParams(linear);
 
-            Log.d(PLATEAU, "j second line : " + j);
-            imageView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1));
+            imageView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT));//, 1/nbCol
             linearLayout = (LinearLayout) findViewById(R.id.linearLayout_secondLine);
-            linearLayout.setWeightSum(nbCol);
-            linearLayout.addView(textView);
-            linearLayout.addView(imageView);
+            linearLayout.setWeightSum(1);
+
+            linearLayoutPlayer_vertical.addView(textView);
+            linearLayoutPlayer_vertical.addView(imageView);
+            linearLayoutPlayer_vertical.addView(nbMoneyView);
+            linearLayout.addView(linearLayoutPlayer_vertical);
         }
-
-            //ListItem item = new ListItem(images[i], names[i]);
-
 
 
         /*
@@ -137,17 +211,17 @@ public class PlateauMascarade extends Activity {
 
             int idImage =this.getIdImageFromCard(card);
 
-            if(idImage == 2130837584 && paysan == false) {
+            if(cardType.equals("Paysan") && paysan == false) {
                 names[i] = cardType;
                 images[i] = idImage;
                 paysan = true;
             }
-            else if(idImage != 2130837584){
+            else if(!cardType.equals("Paysan")){
                 names[i] = cardType;
                 images[i] = idImage;
             }
 
-            //Log.d(PLATEAU, "id : " + images[i] + " -- " + cardType.toLowerCase() + "_label");
+            Log.d(PLATEAU, "id : " + images[i] + " -- " + cardType.toLowerCase() + "_label");
             ListItem item = new ListItem(images[i], names[i]);
             item.setImageId(images[i]);
             item.setNameImage(names[i]);
@@ -209,22 +283,22 @@ public class PlateauMascarade extends Activity {
         int nbPlayer = player.getId();
         int idImage = 0;
         if(nbPlayer == 0){
-            idImage = R.drawable.mask_1;
-        }
-        else if(nbPlayer == 1){
-            idImage = R.drawable.mask_2;
-        }
-        else if(nbPlayer == 2){
             idImage = R.drawable.mask_3;
         }
+        else if(nbPlayer == 1){
+            idImage = R.drawable.mask_8;
+        }
+        else if(nbPlayer == 2){
+            idImage = R.drawable.mask_11;
+        }
         else if(nbPlayer == 3){
-            idImage = R.drawable.mask_4;
+            idImage = R.drawable.mask_6;
         }
         else if(nbPlayer == 4){
-            idImage = R.drawable.mask_5;
+            idImage = R.drawable.mask_13;
         }
         else if(nbPlayer == 5){
-            idImage = R.drawable.mask_6;
+            idImage = R.drawable.mask_2;
         }
         else if(nbPlayer == 6){
             idImage = R.drawable.mask_7;
@@ -233,19 +307,19 @@ public class PlateauMascarade extends Activity {
             idImage = R.drawable.mask_8;
         }
         else if(nbPlayer == 8){
-            idImage = R.drawable.mask_9;
+            idImage = R.drawable.mask_1;
         }
         else if(nbPlayer == 9){
             idImage = R.drawable.mask_10;
         }
         else if(nbPlayer == 10){
-            idImage = R.drawable.mask_11;
+            idImage = R.drawable.mask_9;
         }
         else if(nbPlayer == 11){
             idImage = R.drawable.mask_12;
         }
         else if(nbPlayer == 12){
-            idImage = R.drawable.mask_13;
+            idImage = R.drawable.mask_5;
         }
 
         return idImage;

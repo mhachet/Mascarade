@@ -88,17 +88,23 @@ public class Bank {
         this.setBankCardsListStart(listCardsGame);
     }
 
-    public void initialiseNbPlayers() {
+    public void initialiseNbPlayers(String pseudoMainPlayer) {
         int index = 0;
         ArrayList<Player> playersList = new ArrayList<>();
 
         while (index < nbPlayers) {
             Player player = new Player(6, new Card(), index);
+            player.setName("Player " + index);
             playersList.add(player);
             index++;
         }
 
         this.setListPlayers(playersList);
+
+        //this player will be the main player
+        Player randomMainPlayer = this.getRandomPlayer();
+        randomMainPlayer.setName(pseudoMainPlayer);
+        randomMainPlayer.setIsPlayer(true);
     }
 
     public void distributionCards() {
@@ -213,6 +219,20 @@ public class Bank {
         Player randomPlayer = this.getListPlayers().get(indexRandom);
 
         return randomPlayer;
+    }
+
+    public Player getMainPlayer(){
+        ArrayList<Player> playerArrayList = this.getListPlayers();
+        Player mainPlayer = null;
+        for(int i = 0 ; i < playerArrayList.size() ; i++){
+            Player player = playerArrayList.get(i);
+            boolean isPlayer = player.isPlayer();
+            if(isPlayer){
+                mainPlayer = player;
+            }
+        }
+
+        return mainPlayer;
     }
 
     public Player getWinner() {

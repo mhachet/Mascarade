@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.AccueilMascarade"
-    android:background="@android:drawable/dark_header">
+    android:background="@drawable/fond_mascarade">
 
     <TextView
         android:layout_width="match_parent"
@@ -13,7 +13,7 @@
         android:id="@+id/title_mascarade"
         android:textSize="50dp"
         android:textAlignment="center"
-        android:textColor="#6b0103"
+        android:textColor="#a9342a"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
@@ -23,12 +23,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/linearLayout"
-        android:layout_centerVertical="true"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginLeft="100dp"
-        android:layout_marginRight="100dp">
+        android:layout_margin="10dp">
 
         <Button
+            android:background="@drawable/button_rounded"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Jouer"
@@ -40,9 +40,12 @@
             android:layout_marginTop="100dp"
             android:layout_marginBottom="20dp"
             android:clickable="false"
-            android:capitalize="none" />
+            android:capitalize="none"
+            android:layout_marginLeft="100dp"
+            android:layout_marginRight="100dp" />
 
         <Button
+            android:background="@drawable/button_rounded"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Regles"
@@ -51,9 +54,12 @@
             android:layout_below="@+id/linearLayout"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="20dp"
-            android:capitalize="none" />
+            android:capitalize="none"
+            android:layout_marginLeft="100dp"
+            android:layout_marginRight="100dp" />
 
         <Button
+            android:background="@drawable/button_rounded"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Quitter"
@@ -62,7 +68,9 @@
             android:layout_below="@+id/linearLayout"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="20dp"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="100dp"
+            android:layout_marginRight="100dp" />
 
     </LinearLayout>
 

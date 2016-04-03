@@ -14,8 +14,6 @@ import android.widget.TextView;
 
 import com.mascarade.R;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,8 +36,11 @@ public class OptionsMascarade extends Activity {
 
         this.createSpinnerNbPlayers();
 
-        Button start = (Button)findViewById(R.id.button_start);
-        start.setOnClickListener(new ButtonOnClickListener(start));
+        Button buttonStart = (Button)findViewById(R.id.button_start);
+        buttonStart.setOnClickListener(new ButtonStartOnClickListener(buttonStart));
+
+        Button buttonReturn = (Button)findViewById(R.id.button_return);
+        buttonReturn.setOnClickListener(new ButtonReturnOnClickListener(buttonReturn));
     }
 
     public void createSpinnerNbPlayers(){
@@ -62,13 +63,14 @@ public class OptionsMascarade extends Activity {
 
     }
 
-    class ButtonOnClickListener implements View.OnClickListener{
+    class ButtonStartOnClickListener implements View.OnClickListener{
         private final Button button;
 
-        ButtonOnClickListener(Button button) {
+        ButtonStartOnClickListener(Button button) {
             this.button = button;
         }
-        @Override public void onClick(View v) {
+        @Override
+        public void onClick(View v) {
             Spinner spinnerNbPlayers = (Spinner) findViewById(R.id.spinner_nb_players);
             String nbPlayers = spinnerNbPlayers.getSelectedItem().toString();
             EditText editTextPseudo = (EditText)findViewById(R.id.editText_pseudo);
@@ -83,4 +85,20 @@ public class OptionsMascarade extends Activity {
             startActivity(startGame);
         }
     }
+
+    class ButtonReturnOnClickListener implements View.OnClickListener{
+
+        private final Button button;
+        ButtonReturnOnClickListener(Button button){
+            this.button = button;
+        }
+        @Override
+        public void onClick(View view){
+            Intent accueilMascarade = new Intent(OptionsMascarade.this, AccueilMascarade.class);
+            startActivity(accueilMascarade);
+        }
+    }
+    //button_return
+
+
 }
