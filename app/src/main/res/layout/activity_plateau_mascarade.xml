@@ -179,14 +179,16 @@
                         android:textColor="#ffffff"
                         android:paddingBottom="5dp"
                         android:paddingRight="0dp"
-                        android:paddingLeft="10dp" />
+                        android:paddingLeft="10dp"
+                        android:textSize="10dp" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:id="@+id/textView_round"
                         android:paddingBottom="5dp"
-                        android:textColor="#FFFFFF" />
+                        android:textColor="#FFFFFF"
+                        android:textSize="10dp" />
 
                 </LinearLayout>
 
@@ -206,14 +208,16 @@
                         android:textColor="#ffffff"
                         android:layout_gravity="left"
                         android:paddingBottom="5dp"
-                        android:paddingLeft="10dp" />
+                        android:paddingLeft="10dp"
+                        android:textSize="10dp" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingBottom="5dp"
                         android:id="@+id/textView_last_role_known"
-                        android:textColor="#FFFFFF" />
+                        android:textColor="#FFFFFF"
+                        android:textSize="10dp" />
 
                 </LinearLayout>
 
@@ -235,14 +239,17 @@
                         android:id="@+id/textView_label_gold"
                         android:textColor="#ffffff"
                         android:layout_gravity="left"
-                        android:paddingLeft="10dp" />
+                        android:paddingLeft="10dp"
+                        android:textIsSelectable="false"
+                        android:textSize="10dp" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="0"
                         android:id="@+id/textView_gold"
-                        android:textColor="#FFFFFF" />
+                        android:textColor="#FFFFFF"
+                        android:textSize="10dp" />
 
                 </LinearLayout>
 
@@ -257,27 +264,37 @@
 
                 <Button
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="18dp"
                     android:text="Quitter"
-                    android:layout_weight="0.5"
                     android:background="@drawable/button_leave"
                     android:id="@+id/button_leave"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
+                    android:textSize="7dp"
+                    android:layout_marginTop="5dp" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="16dp"
+                    android:text="Commencer"
+                    android:background="@drawable/button_leave"
+                    android:id="@+id/button_start"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:textSize="7dp"
                     android:layout_marginBottom="5dp"
                     android:layout_marginTop="5dp" />
 
                 <Button
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Commencer"
-                    android:layout_weight="0.5"
+                    android:layout_height="match_parent"
+                    android:text="Suivant"
                     android:background="@drawable/button_leave"
-                    android:id="@+id/button_start"
+                    android:id="@+id/button_next"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginTop="5dp" />
+                    android:textSize="7dp"
+                    android:layout_marginBottom="5dp" />
             </LinearLayout>
 
         </LinearLayout>

@@ -23,6 +23,7 @@ import java.util.List;
 public class OptionsMascarade extends Activity {
 
     private static final String OPTIONS = "OPTIONS";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,10 +77,9 @@ public class OptionsMascarade extends Activity {
             EditText editTextPseudo = (EditText)findViewById(R.id.editText_pseudo);
             String pseudo = editTextPseudo.getText().toString();
             Intent startGame = new Intent(OptionsMascarade.this, PlateauMascarade.class);
-            Log.d(OPTIONS, "Le nombre de joueurs sélectionnés est : " + nbPlayers);
-            Log.d(OPTIONS, "Le pseudo est : " + pseudo);
+            //Log.d(OPTIONS, "Le nombre de joueurs sélectionnés est : " + nbPlayers);
+            //Log.d(OPTIONS, "Le pseudo est : " + pseudo);
 
-            Bundle b = new Bundle();
             startGame.putExtra("pseudo", pseudo);
             startGame.putExtra("nbPlayers", nbPlayers);
             startActivity(startGame);

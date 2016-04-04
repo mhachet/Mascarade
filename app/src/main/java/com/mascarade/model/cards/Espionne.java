@@ -1,6 +1,8 @@
 package com.mascarade.model.cards;
 
 import android.util.Log;
+import android.widget.ImageView;
+
 import com.mascarade.model.game.Player;
 
 /**
@@ -11,8 +13,10 @@ import com.mascarade.model.game.Player;
 public class Espionne extends Card {
     private final int[] nbPlayersEspionne = {7, 10, 11, 12, 13};
     private static final String ESPIONNE = "ESPIONNE";
+    private ImageView spyCard = null;
 
     public Espionne() {
+
         this.initialiseNbPlayers(nbPlayersEspionne);
     }
 
