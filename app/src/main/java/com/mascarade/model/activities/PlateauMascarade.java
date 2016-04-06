@@ -24,6 +24,8 @@ import com.mascarade.model.game.Player;
 import com.mascarade.model.game.Round;
 import com.mascarade.model.game.Tribunal;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -138,10 +140,6 @@ public class PlateauMascarade extends Activity {
     public void setVariablesOnBoard(Bank bank){
         Player mainPlayer = bank.getMainPlayer();
 
-        TextView textView_gold_player = (TextView)findViewById(R.id.textView_gold);
-        int nbMoney_player = mainPlayer.getNbMoney();
-        textView_gold_player.setText(Integer.toString(nbMoney_player));
-
         TextView textView_lastRoleKnown = (TextView)findViewById(R.id.textView_last_role_known);
         String lastRoleKnown = mainPlayer.getLastCardKnown();
         textView_lastRoleKnown.setText(lastRoleKnown);
@@ -149,6 +147,9 @@ public class PlateauMascarade extends Activity {
         TextView textView_countRound = (TextView)findViewById(R.id.textView_round);
         int countRound = bank.getCountRound();
         textView_countRound.setText(Integer.toString(countRound));
+
+        TextView textView_tribunal_gold = (TextView)findViewById(R.id.textView_tribunal_gold);
+        textView_tribunal_gold.setText("0");
     }
 
     public void drawPlayersInGame(Bank bank){
@@ -158,7 +159,7 @@ public class PlateauMascarade extends Activity {
         double nbPlayers = bank.getNbPlayers();
         int nbCol = 0;
 
-        if(nbPlayers == 4 || nbPlayers == 5){
+        if(nbPlayers == 4){
             nbCol = 3;
         }
         else {
@@ -175,58 +176,31 @@ public class PlateauMascarade extends Activity {
             linearLayoutPlayer_vertical.setLayoutParams(linear);
             linearLayoutPlayer_vertical.setOrientation(LinearLayout.VERTICAL);
             linearLayoutPlayer_vertical.setGravity(Gravity.CENTER);
-            linearLayoutPlayer_vertical.setPadding(5, 5, 5, 5);
-            Log.d(PLATEAU, "nbPlayer : " + nbPlayers + " nbCol : " + nbCol);
-            if(i == (nbCol - 1)){
-                if(nbPlayers == 4 || nbPlayers == 5){
-                    Log.d(PLATEAU, "third column");
-                    TextView textView = new TextView(this);
-                    textView.setText("Centre de la table");
-                    textView.setTextSize(10);
-                    textView.setLayoutParams(linear);
+            Log.d(PLATEAU, "nbPlayer : " + nbPlayers + " nbCol : " + nbCol + " i : " + i);
 
-                    ArrayList<Card> listCardCenter = bank.getBankCardsCenter();
-                    Card firstCardCenter = listCardCenter.get(0);
+            Player player = playerArrayList.get(i);
+            //int idImage = this.getIdImageFromPlayer(player);
 
-                    ImageView cardImageView = new ImageView(this);
-                    cardImageView.setImageResource(getIdCardImageFromCard(firstCardCenter));
-                    cardImageView.setLayoutParams(linearLayoutCard);
-                    //Log.d(PLATEAU, "width : " + cardImageView.getLayoutParams().width + " height : " + cardImageView.getLayoutParams().height);
-                    cardImageView.getLayoutParams().height = 250;
-                    cardImageView.getLayoutParams().width = 166;
-                    cardImageView.requestLayout();
-
-                    linearLayoutPlayer_vertical.addView(textView);
-                    linearLayoutPlayer_vertical.addView(cardImageView);
-
-                    linearLayout.addView(linearLayoutPlayer_vertical);
-                }
-
+            boolean isMainPlayer = player.isPlayer();
+            if (isMainPlayer) {
+                Log.d(PLATEAU, player.getId() + " isPlayer : " + isMainPlayer);
+                linearLayoutPlayer_vertical.setBackgroundColor(Color.parseColor("#e3aa79"));
+            } else {
+                Log.d(PLATEAU, player.getId() + " is not Player : " + isMainPlayer);
             }
-            else {
-                Player player = playerArrayList.get(i);
-                //int idImage = this.getIdImageFromPlayer(player);
+            String playerName = player.getName();
 
-                boolean isMainPlayer = player.isPlayer();
-                if (isMainPlayer) {
-                    Log.d(PLATEAU, player.getId() + " isPlayer : " + isMainPlayer);
-                    linearLayoutPlayer_vertical.setBackgroundColor(Color.parseColor("#e3aa79"));
-                } else {
-                    Log.d(PLATEAU, player.getId() + " is not Player : " + isMainPlayer);
-                }
-                String playerName = player.getName();
+            TextView nbMoneyView = new TextView(this);
+            nbMoneyView.setGravity(Gravity.CENTER);
+            nbMoneyView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT));
+            nbMoneyView.setBackgroundResource(R.drawable.gold_coin);
+            nbMoneyView.setText(Integer.toString(player.getNbMoney()));
 
-                TextView nbMoneyView = new TextView(this);
-                nbMoneyView.setGravity(Gravity.CENTER);
-                nbMoneyView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT));
-                nbMoneyView.setBackgroundResource(R.drawable.gold_coin);
-                nbMoneyView.setText(Integer.toString(player.getNbMoney()));
-
-                TextView textView = new TextView(this);
-                textView.setText(playerName);
-                textView.setTextSize(10);
-                textView.setLayoutParams(linear);
+            TextView textView = new TextView(this);
+            textView.setText(playerName);
+            textView.setTextSize(10);
+            textView.setLayoutParams(linear);
 
                 /*
                 ImageView imageView = new ImageView(this);
@@ -237,82 +211,96 @@ public class PlateauMascarade extends Activity {
                         LinearLayout.LayoutParams.WRAP_CONTENT));//, 1/nbCol
                 imageView.setLayoutParams(new LinearLayout.LayoutParams(40,40));
                 */
-                linearLayout = (LinearLayout) findViewById(R.id.linearLayout_firstLine);
-                linearLayout.setWeightSum(1);
+            linearLayout = (LinearLayout) findViewById(R.id.linearLayout_firstLine);
+            linearLayout.setWeightSum(1);
 
-                ImageView cardImageView = new ImageView(this);
-                cardImageView.setImageResource(getIdCardImageFromCard(player.getCard()));
-                cardImageView.setLayoutParams(linearLayoutCard);
-                //Log.d(PLATEAU, "width : " + cardImageView.getLayoutParams().width + " height : " + cardImageView.getLayoutParams().height);
-                cardImageView.getLayoutParams().height = 250;
-                cardImageView.getLayoutParams().width = 166;
-                cardImageView.requestLayout();
+            ImageView cardImageView = new ImageView(this);
+            cardImageView.setImageResource(getIdCardImageFromCard(player.getCard()));
+            cardImageView.setLayoutParams(linearLayoutCard);
+            //Log.d(PLATEAU, "width : " + cardImageView.getLayoutParams().width + " height : " + cardImageView.getLayoutParams().height);
+            cardImageView.getLayoutParams().height = 250;
+            cardImageView.getLayoutParams().width = 166;
+            cardImageView.requestLayout();
 
-                linearLayoutPlayer_vertical.addView(textView);
-                //linearLayoutPlayer_vertical.addView(imageView);
-                linearLayoutPlayer_vertical.addView(nbMoneyView);
-                linearLayoutPlayer_vertical.addView(cardImageView);
-                linearLayout.addView(linearLayoutPlayer_vertical);
-            }
+            linearLayoutPlayer_vertical.addView(textView);
+            //linearLayoutPlayer_vertical.addView(imageView);
+            linearLayoutPlayer_vertical.addView(nbMoneyView);
+            linearLayoutPlayer_vertical.addView(cardImageView);
+            linearLayout.addView(linearLayoutPlayer_vertical);
         }
 
-        for(int j = (int)nbPlayers - 1 ; j >= nbCol ; j--) {
+        if(nbPlayers == 4){
+            Log.d(PLATEAU, "nbPlayer : " + nbPlayers + " nbCol : " + nbCol );
+
+            linearLayout = (LinearLayout) findViewById(R.id.linearLayout_firstLine);
+
+            LinearLayout linearLayoutPlayer_vertical = new LinearLayout(this);
+            linearLayoutPlayer_vertical.setBackgroundColor(Color.parseColor("#f5e0b2"));
+            linearLayoutPlayer_vertical.setLayoutParams(linear);
+            linearLayoutPlayer_vertical.setOrientation(LinearLayout.VERTICAL);
+            linearLayoutPlayer_vertical.setGravity(Gravity.CENTER);
+
+            TextView textView = new TextView(this);
+            textView.setText("Centre de la table");
+            textView.setTextSize(10);
+            textView.setLayoutParams(linear);
+
+            TextView textView_firstCard = new TextView(this);
+            textView_firstCard.setText("Carte n°1");
+            textView_firstCard.setPadding(10,10,10,10);
+            textView_firstCard.setTextSize(10);
+            textView_firstCard.setLayoutParams(linear);
+
+            ArrayList<Card> listCardCenter = bank.getBankCardsCenter();
+            Card firstCardCenter = listCardCenter.get(0);
+
+            ImageView cardImageView = new ImageView(this);
+            cardImageView.setImageResource(getIdCardImageFromCard(firstCardCenter));
+            cardImageView.setLayoutParams(linearLayoutCard);
+            //Log.d(PLATEAU, "width : " + cardImageView.getLayoutParams().width + " height : " + cardImageView.getLayoutParams().height);
+            cardImageView.getLayoutParams().height = 250;
+            cardImageView.getLayoutParams().width = 166;
+            cardImageView.requestLayout();
+
+            linearLayoutPlayer_vertical.addView(textView);
+            linearLayoutPlayer_vertical.addView(textView_firstCard);
+            linearLayoutPlayer_vertical.addView(cardImageView);
+
+            linearLayout.addView(linearLayoutPlayer_vertical);
+
+        }
+        for(int j = (int)nbPlayers - 1 ; j > nbCol -1 ; j--) {
+            Log.d(PLATEAU, "nbPlayer : " + nbPlayers + " nbCol : " + nbCol + " j : " + j);
 
             LinearLayout linearLayoutPlayer_vertical = new LinearLayout(this);
 
             linearLayoutPlayer_vertical.setLayoutParams(linear);
             linearLayoutPlayer_vertical.setOrientation(LinearLayout.VERTICAL);
             linearLayoutPlayer_vertical.setGravity(Gravity.CENTER);
-            linearLayoutPlayer_vertical.setPadding(5, 5, 5, 5);
+            //linearLayoutPlayer_vertical.setPadding(5, 5, 5, 5);
             //int left, int top, int right, int bottom
 
-            if(j == (nbCol - 1)){
-                if(nbPlayers == 4 || nbPlayers == 5){
-                    TextView textView = new TextView(this);
-                    textView.setText("Centre de la table");
-                    textView.setTextSize(10);
-                    textView.setLayoutParams(linear);
+            Player player = playerArrayList.get(j);
 
-                    ArrayList<Card> listCardCenter = bank.getBankCardsCenter();
-                    Card firstCardCenter = listCardCenter.get(0);
+            String namePlayer = player.getName();
 
-                    ImageView cardImageView = new ImageView(this);
-                    cardImageView.setImageResource(getIdCardImageFromCard(firstCardCenter));
-                    cardImageView.setLayoutParams(linearLayoutCard);
-                    //Log.d(PLATEAU, "width : " + cardImageView.getLayoutParams().width + " height : " + cardImageView.getLayoutParams().height);
-                    cardImageView.getLayoutParams().height = 250;
-                    cardImageView.getLayoutParams().width = 166;
-                    cardImageView.requestLayout();
-
-                    linearLayoutPlayer_vertical.addView(textView);
-                    linearLayoutPlayer_vertical.addView(cardImageView);
-
-                    linearLayout.addView(linearLayoutPlayer_vertical);
-                }
-
+            boolean isMainPlayer = player.isPlayer();
+            if (isMainPlayer) {
+                linearLayoutPlayer_vertical.setBackgroundColor(Color.parseColor("#e3aa79"));
             }
-            else {
-                Player player = playerArrayList.get(j);
+            TextView textView = new TextView(this);
+            textView.setText(namePlayer);
+            textView.setTextSize(10);
+            textView.setLayoutParams(linear);
 
-                String namePlayer = player.getName();
+            TextView nbMoneyView = new TextView(this);
+            nbMoneyView.setGravity(Gravity.CENTER);
+            nbMoneyView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT));
+            nbMoneyView.setBackgroundResource(R.drawable.gold_coin);
+            nbMoneyView.setText(Integer.toString(player.getNbMoney()));
 
-                boolean isMainPlayer = player.isPlayer();
-                if (isMainPlayer) {
-                    linearLayoutPlayer_vertical.setBackgroundColor(Color.parseColor("#e3aa79"));
-                }
-                TextView textView = new TextView(this);
-                textView.setText(namePlayer);
-                textView.setTextSize(10);
-                textView.setLayoutParams(linear);
-
-                TextView nbMoneyView = new TextView(this);
-                nbMoneyView.setGravity(Gravity.CENTER);
-                nbMoneyView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT));
-                nbMoneyView.setBackgroundResource(R.drawable.gold_coin);
-                nbMoneyView.setText(Integer.toString(player.getNbMoney()));
-
-                //int idImage = this.getIdImageFromPlayer(player);
+            //int idImage = this.getIdImageFromPlayer(player);
 
                 /*
                 ImageView imageView = new ImageView(this);
@@ -324,24 +312,121 @@ public class PlateauMascarade extends Activity {
                 imageView.setLayoutParams(new LinearLayout.LayoutParams(40,40));
 
                 */
-                linearLayout = (LinearLayout) findViewById(R.id.linearLayout_secondLine);
-                linearLayout.setWeightSum(1);
+            linearLayout = (LinearLayout) findViewById(R.id.linearLayout_secondLine);
+            linearLayout.setWeightSum(1);
 
-                ImageView cardImageView = new ImageView(this);
-                cardImageView.setImageResource(getIdCardImageFromCard(player.getCard()));
-                cardImageView.setLayoutParams(linearLayoutCard);
-                //Log.d(PLATEAU, "width : " + cardImageView.getLayoutParams().width + " height : " + cardImageView.getLayoutParams().height);
-                cardImageView.getLayoutParams().height = 250;
-                cardImageView.getLayoutParams().width = 166;
-                cardImageView.requestLayout();
+            ImageView cardImageView = new ImageView(this);
+            cardImageView.setImageResource(getIdCardImageFromCard(player.getCard()));
+            cardImageView.setLayoutParams(linearLayoutCard);
+            //Log.d(PLATEAU, "width : " + cardImageView.getLayoutParams().width + " height : " + cardImageView.getLayoutParams().height);
+            cardImageView.getLayoutParams().height = 250;
+            cardImageView.getLayoutParams().width = 166;
+            cardImageView.requestLayout();
 
-                linearLayoutPlayer_vertical.addView(textView);
-                //linearLayoutPlayer_vertical.addView(imageView);
-                linearLayoutPlayer_vertical.addView(nbMoneyView);
-                linearLayoutPlayer_vertical.addView(cardImageView);
-                linearLayout.addView(linearLayoutPlayer_vertical);
-            }
+            linearLayoutPlayer_vertical.addView(textView);
+            //linearLayoutPlayer_vertical.addView(imageView);
+            linearLayoutPlayer_vertical.addView(nbMoneyView);
+            linearLayoutPlayer_vertical.addView(cardImageView);
+            linearLayout.addView(linearLayoutPlayer_vertical);
+
         }
+
+        if(nbPlayers == 4){
+            Log.d(PLATEAU, "nbPlayer : " + nbPlayers + " nbCol : " + nbCol );
+
+            linearLayout = (LinearLayout) findViewById(R.id.linearLayout_secondLine);
+
+            LinearLayout linearLayoutPlayer_vertical = new LinearLayout(this);
+
+            linearLayoutPlayer_vertical.setLayoutParams(linear);
+            linearLayoutPlayer_vertical.setOrientation(LinearLayout.VERTICAL);
+            linearLayoutPlayer_vertical.setGravity(Gravity.CENTER);
+            //linearLayoutPlayer_vertical.setPadding(5, 5, 5, 5);
+            linearLayoutPlayer_vertical.setBackgroundColor(Color.parseColor("#f5e0b2"));
+
+            /*
+            TextView textView = new TextView(this);
+            textView.setText("Centre de la table");
+            textView.setTextSize(10);
+            textView.setLayoutParams(linear);
+            */
+
+            ArrayList<Card> listCardCenter = bank.getBankCardsCenter();
+            Card firstCardCenter = listCardCenter.get(1);
+
+            TextView textView_secondCard = new TextView(this);
+            textView_secondCard.setText("Carte n°2");
+            textView_secondCard.setPadding(10, 10, 10, 10);
+            textView_secondCard.setTextSize(10);
+            textView_secondCard.setLayoutParams(linear);
+
+            ImageView cardImageView = new ImageView(this);
+            cardImageView.setImageResource(getIdCardImageFromCard(firstCardCenter));
+            cardImageView.setLayoutParams(linearLayoutCard);
+            //Log.d(PLATEAU, "width : " + cardImageView.getLayoutParams().width + " height : " + cardImageView.getLayoutParams().height);
+            cardImageView.getLayoutParams().height = 250;
+            cardImageView.getLayoutParams().width = 166;
+            cardImageView.requestLayout();
+
+            //relinearLayoutPlayer_vertical.addView(textView);
+            linearLayoutPlayer_vertical.addView(textView_secondCard);
+            linearLayoutPlayer_vertical.addView(cardImageView);
+            linearLayout.addView(linearLayoutPlayer_vertical);
+
+        }
+
+        if(nbPlayers == 5) {
+
+            LinearLayout view_board = (LinearLayout)findViewById(R.id.view_board);
+            view_board.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT, 0.7f));
+
+            LinearLayout linearLayout_horiz_5players = (LinearLayout)findViewById(R.id.linearLayout_horiz_5players);
+            linearLayout_horiz_5players.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.MATCH_PARENT));
+
+            LinearLayout linearLayout_centralCard_5players = new LinearLayout(this);
+            linearLayout_centralCard_5players.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.MATCH_PARENT, 0.3f));
+
+            linearLayout_centralCard_5players.setOrientation(LinearLayout.VERTICAL);
+            linearLayout_centralCard_5players.setGravity(Gravity.CENTER);
+            //linearLayoutPlayer_vertical.setPadding(5, 5, 5, 5);
+            linearLayout_centralCard_5players.setBackgroundColor(Color.parseColor("#f5e0b2"));
+            //linearLayout_centralCard_5players.setBackgroundColor(Color.BLUE);
+
+            TextView textViewCenter = new TextView(this);
+            textViewCenter.setText("Centre de la table");
+            textViewCenter.setGravity(Gravity.CENTER_VERTICAL);
+            textViewCenter.setTextSize(10);
+            textViewCenter.setLayoutParams(linear);
+
+            ArrayList<Card> listCardCenter = bank.getBankCardsCenter();
+            Card firstCardCenter = listCardCenter.get(0);
+
+            TextView textView_secondCard = new TextView(this);
+            textView_secondCard.setText("Carte n°1");
+            textView_secondCard.setGravity(Gravity.CENTER_VERTICAL);
+            textView_secondCard.setPadding(10, 10, 10, 10);
+            textView_secondCard.setTextSize(10);
+            textView_secondCard.setLayoutParams(linear);
+
+            ImageView cardImageView = new ImageView(this);
+            cardImageView.setImageResource(getIdCardImageFromCard(firstCardCenter));
+            cardImageView.setLayoutParams(linearLayoutCard);
+            //Log.d(PLATEAU, "width : " + cardImageView.getLayoutParams().width + " height : " + cardImageView.getLayoutParams().height);
+            cardImageView.getLayoutParams().height = 250;
+            cardImageView.getLayoutParams().width = 166;
+
+            cardImageView.requestLayout();
+
+            linearLayout_centralCard_5players.addView(textViewCenter);
+            linearLayout_centralCard_5players.addView(textView_secondCard);
+            linearLayout_centralCard_5players.addView(cardImageView);
+            linearLayout_horiz_5players.addView(linearLayout_centralCard_5players);
+
+        }
+
     }
 
 
