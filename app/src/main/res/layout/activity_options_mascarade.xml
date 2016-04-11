@@ -47,7 +47,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Indiquez votre pseudo"
+        android:text="Indiquez votre pseudo (12 caractères maximum)"
         android:id="@+id/textView_pseudo"
         android:textColor="#000000"
         android:textSize="20dp"
@@ -66,7 +66,8 @@
         android:layout_row="42"
         android:layout_column="1"
         android:background="#ffffff"
-        android:layout_margin="10dp" />
+        android:layout_margin="10dp"
+        android:maxLength="12" />
 
     <LinearLayout
         android:orientation="horizontal"
