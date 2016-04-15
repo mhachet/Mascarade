@@ -109,8 +109,8 @@
                     android:gravity="fill_vertical"
                     android:textAlignment="center"
                     android:layout_marginBottom="5dp"
-                    android:clickable="false"
-                    android:enabled="false" />
+                    android:clickable="true"
+                    android:enabled="true" />
 
                 <Button
                     android:layout_width="match_parent"
@@ -125,7 +125,8 @@
                     android:textAlignment="center"
                     android:layout_margin="0dp"
                     android:layout_marginTop="0dp"
-                    android:layout_gravity="bottom" />
+                    android:layout_gravity="bottom"
+                    android:clickable="false" />
                 <!--android:background="#a9342a"-->
 
             </LinearLayout>
@@ -227,7 +228,7 @@
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="93dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:id="@+id/linearlayout_vert_tribunal"
                 android:background="#dcf97b"
                 android:weightSum="1"
@@ -306,19 +307,14 @@
                     android:layout_marginTop="5dp"
                     android:layout_weight="0.3" />
 
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="13dp"
-                    android:text="Suivant"
-                    android:background="@drawable/button_leave"
-                    android:id="@+id/button_next"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:textSize="10dp"
-                    android:layout_marginBottom="5dp" />
             </LinearLayout>
 
         </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_instructions" />
 
         <LinearLayout
             android:orientation="horizontal"

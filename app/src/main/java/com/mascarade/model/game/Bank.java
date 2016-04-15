@@ -17,12 +17,8 @@ public class Bank {
     private ArrayList<Card> bankCardsListStart = new ArrayList<>();
     private ArrayList<Card> bankCardsCenter = new ArrayList<>();
     private ArrayList<Player> listPlayers = new ArrayList<>();
-
-    private int nbPlayers = 0;
-
     private Player winner;
-
-    private int countRound = 0;
+    private int nbPlayers = 0;
 
     public Bank(int nbPlayers) {
 
@@ -195,6 +191,15 @@ public class Bank {
         this.nbPlayers = nbPlayers;
     }
 
+    public Player getWinner() {
+        return winner;
+    }
+
+    public void setWinner(Player winner) {
+        this.winner = winner;
+    }
+
+
     public Player getPlayerWithCard(String typeCardConcerned) {
         ArrayList<Player> listPlayers = this.getListPlayers();
         Player playerConcerned = null;
@@ -233,21 +238,5 @@ public class Bank {
         }
 
         return mainPlayer;
-    }
-
-    public Player getWinner() {
-        return winner;
-    }
-
-    public void setWinner(Player winner) {
-        this.winner = winner;
-    }
-
-    public int getCountRound() {
-        return countRound;
-    }
-
-    public void setCountRound(int countRound) {
-        this.countRound = countRound;
     }
 }

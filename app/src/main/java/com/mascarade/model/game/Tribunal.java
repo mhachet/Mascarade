@@ -9,11 +9,10 @@ import java.util.ArrayList;
  */
 public class Tribunal {
 
-    private int nbMoney = 0;
-    private ArrayList<Card> cardArrayList;
+    private int nbMoney;
 
-    public Tribunal(ArrayList<Card> cardsInGame) {
-        this.cardArrayList = cardsInGame;
+    public Tribunal(int nbMoney) {
+        this.nbMoney = nbMoney;
     }
 
     public int getNbMoney() {
@@ -24,11 +23,4 @@ public class Tribunal {
         this.nbMoney = nbMoney;
     }
 
-    public ArrayList<Card> getCardArrayList() {
-        return cardArrayList;
-    }
-
-    public void setCardArrayList(ArrayList<Card> cardArrayList) {
-        this.cardArrayList = cardArrayList;
-    }
 }

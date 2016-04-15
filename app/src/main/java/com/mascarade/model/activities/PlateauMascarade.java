@@ -20,6 +20,7 @@ import com.mascarade.model.cards.Card;
 import com.mascarade.model.cards.Espionne;
 import com.mascarade.model.cards.Fou;
 import com.mascarade.model.game.Bank;
+import com.mascarade.model.game.Game;
 import com.mascarade.model.game.Player;
 import com.mascarade.model.game.Round;
 import com.mascarade.model.game.Tribunal;
@@ -31,8 +32,9 @@ public class PlateauMascarade extends Activity {
 
     private static final String PLATEAU = "PLATEAU";
     private Tribunal tribunal = null;
-    private Bank newGame = null;
+    private Bank bank = null;
     private boolean gameIsLaunch = false;
+    private Game newGame = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,45 +50,55 @@ public class PlateauMascarade extends Activity {
 
             int nbPlayers = Integer.parseInt(plateau.getStringExtra("nbPlayers"));
             String pseudo = plateau.getStringExtra("pseudo");
-            newGame = new Bank(nbPlayers);
-            newGame.initialiseCardsBank();
-            newGame.initialiseNbPlayers(pseudo);
+            bank = new Bank(nbPlayers);
+            bank.initialiseCardsBank();
+            bank.initialiseNbPlayers(pseudo);
 
-            newGame.distributionCards();
+            bank.distributionCards();
 
-            tribunal = new Tribunal(newGame.getBankCardsListStart());
+            tribunal = new Tribunal(0);
 
-            drawRolesInGame(newGame);
+            addInstructionOnBoard("MÉMORISER LES CARTES EN JEU");
 
-            drawPlayersInGame(newGame);
+            drawRolesInGame(bank);
 
-            setVariablesOnBoard(newGame);
+            drawPlayersInGame(bank);
+
+            setVariablesOnBoard(bank);
 
             gameIsLaunch = true;
+
+            newGame = new Game(bank);
+
+
 
         }
         Button startButton = (Button)findViewById(R.id.button_start);
         startButton.setOnClickListener(new ButtonStartGameOnClickListener(startButton));
 
         Button announceCardButton = (Button)findViewById(R.id.button_announceCard);
-        announceCardButton.setClickable(false);
-        announceCardButton.setEnabled(false);
+        //announceCardButton.setClickable(false);
+        //announceCardButton.setEnabled(false);
 
         Button seeCardButton = (Button)findViewById(R.id.button_seeCard);
         seeCardButton.setClickable(false);
         seeCardButton.setEnabled(false);
 
-        Button button_next = (Button)findViewById(R.id.button_next);
-        button_next.setOnClickListener(new ButtonNextOnClickListener(button_next));
+        Button changeCard = (Button)findViewById(R.id.button_changeCard);
+        changeCard.setClickable(false);
+        changeCard.setEnabled(false);
 
 
     }
+
+
+
     class ButtonLeaveOnClickListener implements View.OnClickListener{
-        private final Button button;
+        private final Button buttonLeave;
 
         ButtonLeaveOnClickListener(Button button) {
 
-            this.button = button;
+            this.buttonLeave = button;
         }
         @Override
         public void onClick(View v) {
@@ -96,57 +108,48 @@ public class PlateauMascarade extends Activity {
         }
     }
 
-    class ButtonNextOnClickListener implements View.OnClickListener{
-        private final Button button;
-
-        ButtonNextOnClickListener(Button button) {
-
-            this.button = button;
-        }
-        @Override
-        public void onClick(View v) {
-            TextView textView_nbRound = (TextView)findViewById(R.id.textView_round);
-
-        }
-    }
-
     class ButtonStartGameOnClickListener implements View.OnClickListener{
-        private final Button button;
+        private final Button buttonStartGame;
 
         ButtonStartGameOnClickListener(Button button){
-            this.button = button;
+            this.buttonStartGame = button;
         }
 
         @Override
         public void onClick(View view){
-            this.button.setClickable(false);
-            this.button.setEnabled(false);
+            this.buttonStartGame.setClickable(false);
+            this.buttonStartGame.setEnabled(false);
 
-            initliazeFirstRound();
+            initliazeZeroRound();
+
 
         }
 
     }
 
-    public void initliazeFirstRound(){
-        ArrayList<Player> playerArrayList = newGame.getListPlayers();
+    public void initliazeZeroRound(){
+        ArrayList<Player> playerArrayList = bank.getListPlayers();
 
-        Round firstRound = new Round(0, PlateauMascarade.this);
+        Round zeroRound = new Round(0, this, bank);
         for(int i = 0; i < playerArrayList.size() ; i++){
             Card playerCard = playerArrayList.get(i).getCard();
-            int idCard = this.getIdCardImageFromCard(playerCard);
-            firstRound.hideCard(idCard, newGame, this);
+            zeroRound.hideCard(playerCard, bank, this);
         }
 
-        int nbPlayer = newGame.getNbPlayers();
+        int nbPlayer = bank.getNbPlayers();
         if(nbPlayer < 6){
-            ArrayList<Card> cardsCenter = newGame.getBankCardsCenter();
+            ArrayList<Card> cardsCenter = bank.getBankCardsCenter();
             for(int j = 0 ; j < cardsCenter.size() ; j++){
                 Card cardCenter = cardsCenter.get(j);
-                int idCard = this.getIdCardImageFromCard(cardCenter);
-                firstRound.hideCard(idCard, newGame, this);
+                //Log.d(PLATEAU, "sizeCardsCenter : " + cardCenter.getTypeCard());
+                zeroRound.hideCard(cardCenter, bank, this);
             }
         }
+
+        ArrayList<Round> listRoundsGame = newGame.getListRounds();
+        listRoundsGame.add(zeroRound);
+
+        newGame.addListenersActionPlayer(this);
 
     }
 
@@ -158,8 +161,7 @@ public class PlateauMascarade extends Activity {
         textView_lastRoleKnown.setText(lastRoleKnown);
 
         TextView textView_countRound = (TextView)findViewById(R.id.textView_round);
-        int countRound = bank.getCountRound();
-        textView_countRound.setText(Integer.toString(countRound));
+        textView_countRound.setText("0");
 
         TextView textView_tribunal_gold = (TextView)findViewById(R.id.textView_tribunal_gold);
         textView_tribunal_gold.setText("0");
@@ -240,7 +242,9 @@ public class PlateauMascarade extends Activity {
             linearLayout.setWeightSum(1);
 
             ImageView cardImageView = new ImageView(this);
-            cardImageView.setImageResource(getIdCardImageFromCard(player.getCard()));
+            cardImageView.setTag("imageViewCard_" + player.getTypeCard());
+            Log.d(PLATEAU, "cardViewTag Board : " + cardImageView.getTag());
+            cardImageView.setImageResource(player.getCard().getIdCardImageFromCard());
             cardImageView.setLayoutParams(linearLayoutWrapContent);
             cardImageView.getLayoutParams().height = 250;
             cardImageView.getLayoutParams().width = 166;
@@ -309,7 +313,9 @@ public class PlateauMascarade extends Activity {
             linearLayout.setWeightSum(1);
 
             ImageView cardImageView = new ImageView(this);
-            cardImageView.setImageResource(getIdCardImageFromCard(player.getCard()));
+            cardImageView.setTag("imageViewCard_" + player.getTypeCard());
+            Log.d(PLATEAU, "cardViewTag Board : " + cardImageView.getTag());
+            cardImageView.setImageResource(player.getCard().getIdCardImageFromCard());
             cardImageView.setLayoutParams(linearLayoutWrapContent);
             cardImageView.getLayoutParams().height = 250;
             cardImageView.getLayoutParams().width = 166;
@@ -356,7 +362,9 @@ public class PlateauMascarade extends Activity {
         Card firstCardCenter = listCardCenter.get(0);
 
         ImageView cardImageView = new ImageView(this);
-        cardImageView.setImageResource(getIdCardImageFromCard(firstCardCenter));
+        cardImageView.setTag("imageViewCard_" + firstCardCenter.getTypeCard());
+        Log.d(PLATEAU, "cardViewTag Board : " + cardImageView.getTag());
+        cardImageView.setImageResource(firstCardCenter.getIdCardImageFromCard());
         cardImageView.setLayoutParams(linearLayoutWrapContent);
         cardImageView.getLayoutParams().height = 250;
         cardImageView.getLayoutParams().width = 166;
@@ -392,7 +400,7 @@ public class PlateauMascarade extends Activity {
         linearLayoutPlayer_vertical.setBackgroundColor(Color.parseColor("#662c1b"));
 
         ArrayList<Card> listCardCenter = bank.getBankCardsCenter();
-        Card firstCardCenter = listCardCenter.get(1);
+        Card secondCardCenter = listCardCenter.get(1);
 
         TextView textView_secondCard = new TextView(this);
         textView_secondCard.setText("Carte n°2");
@@ -401,8 +409,9 @@ public class PlateauMascarade extends Activity {
         textView_secondCard.setLayoutParams(linearVertical);
 
         ImageView cardImageView = new ImageView(this);
-
-        cardImageView.setImageResource(getIdCardImageFromCard(firstCardCenter));
+        cardImageView.setTag("imageViewCard_" + secondCardCenter.getTypeCard());
+        Log.d(PLATEAU, "cardViewTag Board : " + cardImageView.getTag());
+        cardImageView.setImageResource(secondCardCenter.getIdCardImageFromCard());
         cardImageView.setLayoutParams(linearLayoutWrapContent);
         cardImageView.getLayoutParams().height = 250;
         cardImageView.getLayoutParams().width = 166;
@@ -455,7 +464,9 @@ public class PlateauMascarade extends Activity {
         Card firstCardCenter = listCardCenter.get(0);
 
         ImageView cardImageView = new ImageView(this);
-        cardImageView.setImageResource(getIdCardImageFromCard(firstCardCenter));
+        cardImageView.setTag("imageViewCard_" + firstCardCenter.getTypeCard());
+        Log.d(PLATEAU, "cardViewTag Board : " + cardImageView.getTag());
+        cardImageView.setImageResource(firstCardCenter.getIdCardImageFromCard());
         cardImageView.setLayoutParams(linearLayoutCard);
         cardImageView.getLayoutParams().height = 250;
         cardImageView.getLayoutParams().width = 166;
@@ -481,7 +492,7 @@ public class PlateauMascarade extends Activity {
             Card card = cardArrayListInGame.get(i);
             String cardType = cardArrayListInGame.get(i).getTypeCard();
 
-            int idImage =this.getIdImageFromCard(card);
+            int idImage = card.getIdImageLabelFromCard();
 
             if(cardType.equals("Paysan") && paysan == false) {
                 names[i] = cardType;
@@ -505,97 +516,14 @@ public class PlateauMascarade extends Activity {
         listViewCardsLabel.setOnItemClickListener(adapter);
     }
 
-    public int getIdImageFromCard(Card card){
+    public void addInstructionOnBoard(String newTextInInstructions){
+        TextView textViewInstruction = (TextView)findViewById(R.id.textView_instructions);
 
-        String cardType = card.getTypeCard();
+        textViewInstruction.setText(newTextInInstructions);
 
-        int idImage = 0;
-
-        if(cardType.equals("Juge")) {
-            idImage = R.drawable.juge_label;
-        }
-        else if(cardType.equals("Espionne")) {
-            idImage = R.drawable.espionne_label;
-        }
-        else if(cardType.equals("Eveque")) {
-            idImage = R.drawable.eveque_label;
-        }
-        else if(cardType.equals("Fou")) {
-            idImage = R.drawable.fou_label;
-        }
-        else if(cardType.equals("Inquisiteur")) {
-            idImage = R.drawable.inquisiteur_label;
-        }
-        else if(cardType.equals("Paysan")) {
-            idImage = R.drawable.paysans_label;
-        }
-        else if(cardType.equals("Reine")) {
-            idImage = R.drawable.reine_label;
-        }
-        else if(cardType.equals("Roi")) {
-            idImage = R.drawable.roi_label;
-        }
-        else if(cardType.equals("Sorciere")) {
-            idImage = R.drawable.sorciere_label;
-        }
-        else if(cardType.equals("Tricheur")) {
-            idImage = R.drawable.tricheur_label;
-        }
-        else if(cardType.equals("Veuve")) {
-            idImage = R.drawable.veuve_label;
-        }
-        else if(cardType.equals("Voleur")) {
-            idImage = R.drawable.voleur_label;
-        }
-
-        return idImage;
     }
 
-    public int getIdCardImageFromCard(Card card){
 
-        String cardType = card.getTypeCard();
-
-        int idImage = 0;
-
-        if(cardType.equals("Juge")) {
-            idImage = R.drawable.juge_card;
-        }
-        else if(cardType.equals("Espionne")) {
-            idImage = R.drawable.espionne_card;
-        }
-        else if(cardType.equals("Eveque")) {
-            idImage = R.drawable.eveque_card;
-        }
-        else if(cardType.equals("Fou")) {
-            idImage = R.drawable.fou_card;
-        }
-        else if(cardType.equals("Inquisiteur")) {
-            idImage = R.drawable.inquisiteur_card;
-        }
-        else if(cardType.equals("Paysan")) {
-            idImage = R.drawable.paysan_card;
-        }
-        else if(cardType.equals("Reine")) {
-            idImage = R.drawable.reine_card;
-        }
-        else if(cardType.equals("Roi")) {
-            idImage = R.drawable.roi_card;
-        }
-        else if(cardType.equals("Sorciere")) {
-            idImage = R.drawable.sorciere_card;
-        }
-        else if(cardType.equals("Tricheur")) {
-            idImage = R.drawable.tricheur_card;
-        }
-        else if(cardType.equals("Veuve")) {
-            idImage = R.drawable.veuve_card;
-        }
-        else if(cardType.equals("Voleur")) {
-            idImage = R.drawable.voleur_card;
-        }
-
-        return idImage;
-    }
 
     public int getIdImageFromPlayer(Player player){
         int nbPlayer = player.getId();
@@ -687,12 +615,12 @@ public class PlateauMascarade extends Activity {
         this.tribunal = tribunal;
     }
 
-    public Bank getNewGame() {
-        return newGame;
+    public Bank getBank() {
+        return bank;
     }
 
-    public void setNewGame(Bank newGame) {
-        this.newGame = newGame;
+    public void setBank(Bank bank) {
+        this.bank = bank;
     }
 
     public boolean isGameIsLaunch() {
