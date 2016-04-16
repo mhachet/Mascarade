@@ -7,10 +7,10 @@ import com.mascarade.model.game.Player;
  */
 public class Paysan extends Card {
 
-    private final int[] nbPlayersPaysan = {8, 9, 10, 11, 12, 13};
+   // private final int[] nbPlayersPaysan = {8, 9, 10, 11, 12, 13};
 
     public Paysan() {
-        this.initialiseNbPlayers(nbPlayersPaysan);
+
     }
 
     /**
@@ -41,7 +41,8 @@ public class Paysan extends Card {
 
     }
 
-    public int[] getNbPlayersPaysan() {
+    /*public int[] getNbPlayersPaysan() {
         return nbPlayersPaysan;
     }
+    */
 }

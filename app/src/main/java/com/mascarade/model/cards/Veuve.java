@@ -7,10 +7,10 @@ import com.mascarade.model.game.Player;
  */
 public class Veuve extends Card {
 
-    private final int[] nbPlayersVeuve = {12, 13};
+    //private final int[] nbPlayersVeuve = {12, 13};
 
     public Veuve() {
-        this.initialiseNbPlayers(nbPlayersVeuve);
+
     }
 
     /**
@@ -19,10 +19,13 @@ public class Veuve extends Card {
      * @param concernedPlayer
      */
     public void activePower(Player concernedPlayer){
+
         concernedPlayer.setNbMoney(10);
     }
 
+    /*
     public int[] getNbPlayersVeuve() {
         return nbPlayersVeuve;
     }
+    */
 }

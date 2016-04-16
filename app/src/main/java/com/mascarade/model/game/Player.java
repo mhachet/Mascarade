@@ -1,5 +1,10 @@
 package com.mascarade.model.game;
 
+import android.app.Activity;
+import android.util.Log;
+import android.widget.TextView;
+
+import com.mascarade.R;
 import com.mascarade.model.cards.Card;
 
 /**
@@ -7,6 +12,7 @@ import com.mascarade.model.cards.Card;
  */
 public class Player {
 
+    private Activity boardMascarade;
     private int nbMoney = 6;
     private Card card;
     private String cardType = "";
@@ -15,11 +21,13 @@ public class Player {
     private String name = "";
     private boolean isPlayer = false;
     private String lastCardKnown = "inconnu";
+    private static final String PLAYER = "PLAYER";
 
-    public Player(int nbMoney, Card card, int id) {
+    public Player(int nbMoney, Card card, int id, Activity boardMascarade) {
         this.card = card;
         this.nbMoney = nbMoney;
         this.id = id;
+        this.boardMascarade = boardMascarade;
     }
 
     /**
@@ -37,11 +45,13 @@ public class Player {
         if(announcedCard.equals(this.getTypeCard())){
             trueCard = true;
             Card cardActived = this.getCard();
-            cardActived.activePower();
+            Log.d(PLAYER, "Correct => annouced  : " + announcedCard + " playerCard : " + this.getTypeCard());
+            cardActived.activePower(this);
         }
         else{
             this.setNbMoney(this.getNbMoney() - 1);
             tribunal.setNbMoney(tribunal.getNbMoney() + 1);
+            Log.d(PLAYER, "Wrong => annouced  : " + announcedCard + " playerCard : " + this.getTypeCard());
         }
         return trueCard;
     }
@@ -82,7 +92,11 @@ public class Player {
     }
 
     public void setNbMoney(int nbMoney) {
+        String idStringTextViewGold = "gold_player_" +this.getId();
+        TextView textViewGoldPlayer = (TextView)boardMascarade.findViewById(R.id.linearLayout_horiz_5players).findViewWithTag(idStringTextViewGold);
+        Log.d(PLAYER, "textView before : " + textViewGoldPlayer.getText());
 
+        textViewGoldPlayer.setText(Integer.toString(nbMoney));
         this.nbMoney = nbMoney;
     }
 

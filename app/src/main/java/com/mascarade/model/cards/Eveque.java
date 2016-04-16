@@ -12,11 +12,12 @@ import java.util.List;
  */
 public class Eveque extends Card {
 
-    private final int[] nbPlayersEveque = {4, 5, 6, 7, 8, 9, 10, 11, 12, 13};
+    //private final int[] nbPlayersEveque = {4, 5, 6, 7, 8, 9, 10, 11, 12, 13};
     private static final String EVEQUE = "EVEQUE";
 
     public Eveque() {
-        this.initialiseNbPlayers(nbPlayersEveque);
+
+
     }
 
     /**
@@ -66,10 +67,5 @@ public class Eveque extends Card {
         }
         return richestPlayers;
     }
-
-    public int[] getNbPlayersEveque() {
-        return nbPlayersEveque;
-    }
-
 
 }

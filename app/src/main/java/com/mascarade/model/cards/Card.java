@@ -1,12 +1,17 @@
 package com.mascarade.model.cards;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.Image;
+import android.util.Log;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.mascarade.R;
+import com.mascarade.model.game.Bank;
 import com.mascarade.model.game.Player;
+import com.mascarade.model.game.Tribunal;
 
 import java.util.ArrayList;
 
@@ -15,20 +20,71 @@ import java.util.ArrayList;
  */
 public class Card {
 
-    protected ArrayList<Integer> nbPlayers;
     protected boolean visibleAll = false;
     protected boolean visiblePlayer = false;
+    private final String CARD = "CARD";
+    protected Bank bank;
+    protected Activity boardMascarade;
+
     //protected String imageLabelPath = "";
 
     public Card() {
+
     }
 
-    public void initialiseNbPlayers(int[] nbPlayersTable) {
-        nbPlayers = new ArrayList<>();
+    public void activePower(Player playerConcerned) {
+        String rolePlayer = playerConcerned.getCardType();
+        Log.d(CARD, "activation of player role " + rolePlayer);
 
-        for (int i = 0; i < nbPlayersTable.length; i++) {
-            nbPlayers.add(nbPlayersTable[i]);
+        if(rolePlayer.equals("Juge")) {
+            Roi cardRoiPlayer = (Roi)playerConcerned.getCard();
+            cardRoiPlayer.activePower(playerConcerned);
         }
+        else if(rolePlayer.equals("Espionne")) {
+            Espionne cardEspionnePlayer = (Espionne)playerConcerned.getCard();
+            //cardEspionnePlayer.activePower(playerConcerned, playerOpponent, changeCards);
+        }
+        else if(rolePlayer.equals("Eveque")) {
+            Eveque cardEvequePlayer = (Eveque)playerConcerned.getCard();
+            cardEvequePlayer.activePower(playerConcerned, this.getBank());
+        }
+        else if(rolePlayer.equals("Fou")) {
+            Fou cardFouPlayer = (Fou)playerConcerned.getCard();
+            //cardFouPlayer.activePower(playerConcerned, firstPlayer, secondPlayer, activeChange);
+        }
+        else if(rolePlayer.equals("Inquisiteur")) {
+            Inquisiteur cardInquisiteurPlayer = (Inquisiteur)playerConcerned.getCard();
+            //cardInquisiteurPlayer.activePower(); not done
+        }
+        else if(rolePlayer.equals("Paysan")) {
+            Paysan cardPaysanPlayer = (Paysan)playerConcerned.getCard();
+            //cardPaysanPlayer.activePower(otherPaysan, concernedPlayer, partnerPlayer);
+        }
+        else if(rolePlayer.equals("Reine")) {
+            Reine cardReinePlayer = (Reine)playerConcerned.getCard();
+            cardReinePlayer.activePower(playerConcerned);
+        }
+        else if(rolePlayer.equals("Roi")) {
+            Roi cardRoiPlayer = (Roi)playerConcerned.getCard();
+            cardRoiPlayer.activePower(playerConcerned);
+        }
+        else if(rolePlayer.equals("Sorciere")) {
+            Sorciere cardSorcierePlayer = (Sorciere)playerConcerned.getCard();
+            //cardSorcierePlayer.activePower(playerConcerned, opponentPlayer);
+        }
+        else if(rolePlayer.equals("Tricheur")) {
+            Tricheur cardTricheurPlayer = (Tricheur)playerConcerned.getCard();
+            cardTricheurPlayer.activePower(playerConcerned, this.getBank());
+        }
+        else if(rolePlayer.equals("Veuve")) {
+            Veuve cardVeuvePlayer = (Veuve)playerConcerned.getCard();
+            cardVeuvePlayer.activePower(playerConcerned);
+        }
+        else if(rolePlayer.equals("Voleur")) {
+            Voleur cardVoleurPlayer = (Voleur)playerConcerned.getCard();
+            cardVoleurPlayer.activePower(playerConcerned, this.getBank());
+        }
+
     }
 
     public Bitmap getLabelCard(String imageLabelPath){
@@ -132,21 +188,9 @@ public class Card {
         return idImage;
     }
 
-    public void activePower() {
-
-    }
 
     public void exchangeCards(Player playerOne, Player playerTwo) {
 
-    }
-
-
-    public ArrayList<Integer> getNbPlayers() {
-        return nbPlayers;
-    }
-
-    public void setNbPlayers(ArrayList<Integer> nbPlayers) {
-        this.nbPlayers = nbPlayers;
     }
 
     public String getTypeCard() {
@@ -167,5 +211,21 @@ public class Card {
 
     public void setVisiblePlayer(boolean visiblePlayer) {
         this.visiblePlayer = visiblePlayer;
+    }
+
+    public Bank getBank() {
+        return bank;
+    }
+
+    public void setBank(Bank bank) {
+        this.bank = bank;
+    }
+
+    public Activity getBoardMascarade() {
+        return boardMascarade;
+    }
+
+    public void setBoardMascarade(Activity boardMascarade) {
+        this.boardMascarade = boardMascarade;
     }
 }

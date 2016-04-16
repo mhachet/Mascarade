@@ -8,10 +8,9 @@ import com.mascarade.model.game.Tribunal;
  */
 public class Juge extends Card {
 
-    private final int[] nbPlayersJuge = {4, 5, 6, 7, 8, 9, 10, 11, 12, 13};
+    //private final int[] nbPlayersJuge = {4, 5, 6, 7, 8, 9, 10, 11, 12, 13};
 
-    public Juge() {
-        this.initialiseNbPlayers(nbPlayersJuge);
+    public Juge(){
     }
 
 
@@ -27,7 +26,5 @@ public class Juge extends Card {
         tribunal.setNbMoney(0);
     }
 
-    public int[] getNbPlayersJuge() {
-        return nbPlayersJuge;
-    }
+    //public int[] getNbPlayersJuge() {return nbPlayersJuge;}
 }

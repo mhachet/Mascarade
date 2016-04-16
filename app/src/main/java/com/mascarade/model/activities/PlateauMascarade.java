@@ -52,11 +52,11 @@ public class PlateauMascarade extends Activity {
             String pseudo = plateau.getStringExtra("pseudo");
             bank = new Bank(nbPlayers);
             bank.initialiseCardsBank();
-            bank.initialiseNbPlayers(pseudo);
+            bank.initialiseNbPlayers(pseudo, this);
 
             bank.distributionCards();
 
-            tribunal = new Tribunal(0);
+            tribunal = new Tribunal(0, this);
 
             addInstructionOnBoard("MÉMORISER LES CARTES EN JEU");
 
@@ -81,12 +81,12 @@ public class PlateauMascarade extends Activity {
         //announceCardButton.setEnabled(false);
 
         Button seeCardButton = (Button)findViewById(R.id.button_seeCard);
-        seeCardButton.setClickable(false);
-        seeCardButton.setEnabled(false);
+        //seeCardButton.setClickable(false);
+        //seeCardButton.setEnabled(false);
 
         Button changeCard = (Button)findViewById(R.id.button_changeCard);
-        changeCard.setClickable(false);
-        changeCard.setEnabled(false);
+        //changeCard.setClickable(false);
+        //changeCard.setEnabled(false);
 
 
     }
@@ -130,7 +130,7 @@ public class PlateauMascarade extends Activity {
     public void initliazeZeroRound(){
         ArrayList<Player> playerArrayList = bank.getListPlayers();
 
-        Round zeroRound = new Round(0, this, bank);
+        Round zeroRound = new Round(0, this, bank, tribunal);
         for(int i = 0; i < playerArrayList.size() ; i++){
             Card playerCard = playerArrayList.get(i).getCard();
             zeroRound.hideCard(playerCard, bank, this);
@@ -214,7 +214,7 @@ public class PlateauMascarade extends Activity {
             linearLayoutPlayer_vertical.setLayoutParams(linearVertical);
             linearLayoutPlayer_vertical.setOrientation(LinearLayout.VERTICAL);
             linearLayoutPlayer_vertical.setGravity(Gravity.CENTER);
-            Log.d(PLATEAU, "nbPlayer : " + nbPlayers + " nbCol : " + nbCol + " i : " + i + " ratio : " + ratioLinear);
+            //Log.d(PLATEAU, "nbPlayer : " + nbPlayers + " nbCol : " + nbCol + " i : " + i + " ratio : " + ratioLinear);
 
             Player player = playerArrayList.get(i);
 
@@ -226,6 +226,7 @@ public class PlateauMascarade extends Activity {
             String playerName = player.getName();
 
             TextView nbMoneyView = new TextView(this);
+            nbMoneyView.setTag("gold_player_" + player.getId());
             nbMoneyView.setGravity(Gravity.CENTER);
             nbMoneyView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT));
@@ -278,7 +279,7 @@ public class PlateauMascarade extends Activity {
                 LinearLayout.LayoutParams.WRAP_CONTENT);
 
         for(int j = (int)nbPlayers - 1 ; j > nbCol -1 ; j--) {
-            Log.d(PLATEAU, "nbPlayer : " + nbPlayers + " nbCol : " + nbCol + " j : " + j + " ratio : " + ratioLinear);
+            //Log.d(PLATEAU, "nbPlayer : " + nbPlayers + " nbCol : " + nbCol + " j : " + j + " ratio : " + ratioLinear);
 
             LinearLayout linearLayoutPlayer_vertical = new LinearLayout(this);
 
@@ -303,6 +304,7 @@ public class PlateauMascarade extends Activity {
             textView.setLayoutParams(linearVertical);
 
             TextView nbMoneyView = new TextView(this);
+            nbMoneyView.setTag("gold_player_" + player.getId());
             nbMoneyView.setGravity(Gravity.CENTER);
             nbMoneyView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT));
@@ -314,7 +316,7 @@ public class PlateauMascarade extends Activity {
 
             ImageView cardImageView = new ImageView(this);
             cardImageView.setTag("imageViewCard_" + player.getTypeCard());
-            Log.d(PLATEAU, "cardViewTag Board : " + cardImageView.getTag());
+            //Log.d(PLATEAU, "cardViewTag Board : " + cardImageView.getTag());
             cardImageView.setImageResource(player.getCard().getIdCardImageFromCard());
             cardImageView.setLayoutParams(linearLayoutWrapContent);
             cardImageView.getLayoutParams().height = 250;

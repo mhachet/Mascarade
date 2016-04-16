@@ -5,14 +5,12 @@ package com.mascarade.model.cards;
  */
 public class Inquisiteur extends Card {
 
-    private final int[] nbPlayersInquisiteur = {11, 12, 13};
+    //private final int[] nbPlayersInquisiteur = {11, 12, 13};
 
-    public Inquisiteur() {
-        this.initialiseNbPlayers(nbPlayersInquisiteur);
+    public Inquisiteur(){
+
     }
 
-    public int[] getNbPlayersInquisiteur() {
-        return nbPlayersInquisiteur;
-    }
+    //public int[] getNbPlayersInquisiteur() {return nbPlayersInquisiteur;}
 
 }

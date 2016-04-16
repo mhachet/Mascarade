@@ -8,10 +8,9 @@ import com.mascarade.model.game.Player;
  */
 public class Tricheur extends Card {
 
-    private final int[] nbPlayersTricheur = {4, 5, 6, 9, 10, 11, 12, 13};
+    //private final int[] nbPlayersTricheur = {4, 5, 6, 9, 10, 11, 12, 13};
 
     public Tricheur() {
-        this.initialiseNbPlayers(nbPlayersTricheur);
     }
 
     /**
@@ -28,7 +27,11 @@ public class Tricheur extends Card {
         }
     }
 
+
+    /*
     public int[] getNbPlayersTricheur() {
+
         return nbPlayersTricheur;
     }
+    */
 }

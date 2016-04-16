@@ -7,12 +7,17 @@ import com.mascarade.model.game.Player;
  */
 public class Sorciere extends Card {
 
-    private final int[] nbPlayersSorciere = {5, 6, 7, 8, 9, 10, 11, 12, 13};
+    //private final int[] nbPlayersSorciere = {5, 6, 7, 8, 9, 10, 11, 12, 13};
 
-    public Sorciere() {
-        this.initialiseNbPlayers(nbPlayersSorciere);
+    public Sorciere(){
     }
 
+    /**
+     * The "Sorciere" power is to change all her own gold with another player.
+     *
+     * @param concernedPlayer
+     * @param opponentPlayer
+     */
     public void activePower(Player concernedPlayer, Player opponentPlayer){
         int nbMoneyConcerned = concernedPlayer.getNbMoney();
         int nbMoneyOpponent = opponentPlayer.getNbMoney();
@@ -21,7 +26,8 @@ public class Sorciere extends Card {
         opponentPlayer.setNbMoney(nbMoneyConcerned);
     }
 
-    public int[] getNbPlayersSorciere() {
+    /*public int[] getNbPlayersSorciere() {
         return nbPlayersSorciere;
     }
+    */
 }
