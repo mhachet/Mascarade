@@ -20,10 +20,12 @@ public class Juge extends Card {
      * @param concernedPlayer
      * @param tribunal
      */
-    public void activePower(Player concernedPlayer, Tribunal tribunal) {
+    public int activePower(Player concernedPlayer, Tribunal tribunal) {
         int tribunalMoney = tribunal.getNbMoney();
         concernedPlayer.setNbMoney(concernedPlayer.getNbMoney() + tribunalMoney);
         tribunal.setNbMoney(0);
+
+        return tribunalMoney;
     }
 
     //public int[] getNbPlayersJuge() {return nbPlayersJuge;}

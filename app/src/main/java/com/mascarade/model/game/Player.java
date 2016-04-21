@@ -32,7 +32,7 @@ public class Player {
 
     /**
      *
-     * First power : to annouce its card
+     * First power : to announce its card
      * if correct : card power is activated
      * else : player must pay 1 gold coin
      *
@@ -92,9 +92,9 @@ public class Player {
     }
 
     public void setNbMoney(int nbMoney) {
-        String idStringTextViewGold = "gold_player_" +this.getId();
+        String idStringTextViewGold = "gold_player_" + this.getId();
         TextView textViewGoldPlayer = (TextView)boardMascarade.findViewById(R.id.linearLayout_horiz_5players).findViewWithTag(idStringTextViewGold);
-        Log.d(PLAYER, "textView before : " + textViewGoldPlayer.getText());
+        Log.d(PLAYER, "textView before : " + textViewGoldPlayer.getText() + " " + this.getName());
 
         textViewGoldPlayer.setText(Integer.toString(nbMoney));
         this.nbMoney = nbMoney;

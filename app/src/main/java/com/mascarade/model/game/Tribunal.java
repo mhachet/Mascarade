@@ -31,6 +31,27 @@ public class Tribunal {
         textView_tribunal_gold.setText(Integer.toString(nbMoney));
     }
 
+
+    /**
+     * return true if player has enough money to pay the tribunal
+     * else false
+     *
+     * @param player
+     * @return boolean
+     */
+    public boolean getMoneyFromPlayer(Player player){
+        boolean transaction = false;
+        int nbMoneyPlayer = player.getNbMoney();
+
+        if(nbMoneyPlayer > 1){
+            player.setNbMoney(nbMoneyPlayer - 1);
+            this.setNbMoney(this.getNbMoney() + 1);
+            transaction = true;
+        }
+
+        return transaction;
+    }
+
     public Activity getBoardMascarade() {
 
         return boardMascarade;

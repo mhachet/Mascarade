@@ -24,21 +24,26 @@ public class Eveque extends Card {
      * The Eveque power allow to take 2 gold pieces to the richest player.
      * If equality between several players, the concerned player chose as he wants.
      */
-    public void activePower(Player concernedPlayer, Bank bank) {
-        int maxMoney = this.findMaxMoneyOfPlayers(bank);
-        List<Player> richestPlayers = this.findRichestPlayers(bank, maxMoney);
+    public int activePower(Player concernedPlayer, Bank bank) {
+        int moneyRetrieved = 0;
+        //int maxMoney = this.findMaxMoneyOfPlayers(bank);
+        List<Player> richestPlayers = this.findRichestPlayers(bank);
         Player opponentPlayer = richestPlayers.get(0);
         int nbMoneyOpponent = opponentPlayer.getNbMoney();
         Log.d(EVEQUE, "before eveque has " + concernedPlayer.getNbMoney() + " and opponent " + opponentPlayer.getNbMoney());
         if (nbMoneyOpponent >= 2) {
             concernedPlayer.setNbMoney(concernedPlayer.getNbMoney() + 2);
             opponentPlayer.setNbMoney(opponentPlayer.getNbMoney() - 2);
+            moneyRetrieved = 2;
+
         } else {
             concernedPlayer.setNbMoney(concernedPlayer.getNbMoney() + opponentPlayer.getNbMoney());
             opponentPlayer.setNbMoney(0);
+            moneyRetrieved = opponentPlayer.getNbMoney();
         }
         Log.d(EVEQUE, "after eveque has " + concernedPlayer.getNbMoney() + " and opponent " + opponentPlayer.getNbMoney());
 
+        return moneyRetrieved;
     }
 
     public int findMaxMoneyOfPlayers(Bank bank) {
@@ -55,14 +60,21 @@ public class Eveque extends Card {
         return max;
     }
 
-    public ArrayList<Player> findRichestPlayers(Bank bank, int maxMoney) {
+    public ArrayList<Player> findRichestPlayers(Bank bank) {
+        int maxMoney = this.findMaxMoneyOfPlayers(bank);
         ArrayList<Player> playerArrayList = bank.getListPlayers();
         ArrayList<Player> richestPlayers = new ArrayList<>();
         for (int p = 0; p < playerArrayList.size(); p++) {
             Player player = playerArrayList.get(p);
-            int moneyPlayer = player.getNbMoney();
-            if (maxMoney == moneyPlayer) {
-                richestPlayers.add(player);
+            if(!player.equals(this)) {
+                Log.d(EVEQUE, "richest player in eveque" + player.getName());
+                int moneyPlayer = player.getNbMoney();
+                if (maxMoney == moneyPlayer) {
+                    richestPlayers.add(player);
+                }
+            }
+            else{
+                Log.d(EVEQUE, "main player in eveque" + player.getName());
             }
         }
         return richestPlayers;

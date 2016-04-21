@@ -26,6 +26,7 @@ public class Paysan extends Card {
      */
     public void activePower(boolean otherPaysan, Player concernedPlayer, Player partnerPlayer){
 
+
         Card partnerCard = partnerPlayer.getCard();
         Card concernedCard = concernedPlayer.getCard();
 
@@ -40,6 +41,7 @@ public class Paysan extends Card {
         }
 
     }
+
 
     /*public int[] getNbPlayersPaysan() {
         return nbPlayersPaysan;

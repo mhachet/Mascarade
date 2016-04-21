@@ -33,12 +33,13 @@ public class Card {
     }
 
     public void activePower(Player playerConcerned) {
+       /*
         String rolePlayer = playerConcerned.getCardType();
         Log.d(CARD, "activation of player role " + rolePlayer);
 
         if(rolePlayer.equals("Juge")) {
-            Roi cardRoiPlayer = (Roi)playerConcerned.getCard();
-            cardRoiPlayer.activePower(playerConcerned);
+            Juge cardJugePlayer = (Juge)playerConcerned.getCard();
+            cardJugePlayer.activePower(playerConcerned);
         }
         else if(rolePlayer.equals("Espionne")) {
             Espionne cardEspionnePlayer = (Espionne)playerConcerned.getCard();
@@ -84,7 +85,7 @@ public class Card {
             Voleur cardVoleurPlayer = (Voleur)playerConcerned.getCard();
             cardVoleurPlayer.activePower(playerConcerned, this.getBank());
         }
-
+*/
     }
 
     public Bitmap getLabelCard(String imageLabelPath){
