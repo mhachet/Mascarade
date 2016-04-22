@@ -14,6 +14,10 @@ public class Eveque extends Card {
 
     //private final int[] nbPlayersEveque = {4, 5, 6, 7, 8, 9, 10, 11, 12, 13};
     private static final String EVEQUE = "EVEQUE";
+    private Player concernedPlayer;
+    private Bank bank;
+
+    private int nbMoneyRetrieved = 0;
 
     public Eveque() {
 
@@ -23,8 +27,10 @@ public class Eveque extends Card {
     /**
      * The Eveque power allow to take 2 gold pieces to the richest player.
      * If equality between several players, the concerned player chose as he wants.
+     *
+     * Player concernedPlayer, Bank bank
      */
-    public int activePower(Player concernedPlayer, Bank bank) {
+    public void activePower() {
         int moneyRetrieved = 0;
         //int maxMoney = this.findMaxMoneyOfPlayers(bank);
         List<Player> richestPlayers = this.findRichestPlayers(bank);
@@ -43,7 +49,9 @@ public class Eveque extends Card {
         }
         Log.d(EVEQUE, "after eveque has " + concernedPlayer.getNbMoney() + " and opponent " + opponentPlayer.getNbMoney());
 
-        return moneyRetrieved;
+        this.setNbMoneyRetrieved(moneyRetrieved);
+
+        //return moneyRetrieved;
     }
 
     public int findMaxMoneyOfPlayers(Bank bank) {
@@ -80,4 +88,27 @@ public class Eveque extends Card {
         return richestPlayers;
     }
 
+    public int getNbMoneyRetrieved() {
+        return nbMoneyRetrieved;
+    }
+
+    public void setNbMoneyRetrieved(int nbMoneyRetrieved) {
+        this.nbMoneyRetrieved = nbMoneyRetrieved;
+    }
+
+    public Player getConcernedPlayer() {
+        return concernedPlayer;
+    }
+
+    public void setConcernedPlayer(Player concernedPlayer) {
+        this.concernedPlayer = concernedPlayer;
+    }
+
+    public Bank getBank() {
+        return bank;
+    }
+
+    public void setBank(Bank bank) {
+        this.bank = bank;
+    }
 }

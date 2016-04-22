@@ -12,12 +12,13 @@ public class Roi extends Card {
     //private final int[] nbPlayersRoi = {4, 5, 6, 7, 8, 9, 10, 11, 12, 13};
     private final String ROI = "ROI";
 
+    private Player concernedPlayer;
+
     public Roi() {
         //this.initialiseNbPlayers(nbPlayersRoi);
     }
 
-    public void activePower(Player concernedPlayer){
-
+    public void activePower(){
         concernedPlayer.setNbMoney(concernedPlayer.getNbMoney() + 3);
         Log.d(ROI, " money player : " + concernedPlayer.getNbMoney());
     }

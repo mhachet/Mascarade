@@ -9,6 +9,8 @@ public class Veuve extends Card {
 
     //private final int[] nbPlayersVeuve = {12, 13};
 
+    private Player concernedPlayer;
+
     public Veuve() {
 
     }
@@ -16,11 +18,18 @@ public class Veuve extends Card {
     /**
      * The 'Veuve' power allow to win gold coins until 10.
      *
-     * @param concernedPlayer
      */
-    public void activePower(Player concernedPlayer){
+    public void activePower(){
 
         concernedPlayer.setNbMoney(10);
+    }
+
+    public Player getConcernedPlayer() {
+        return concernedPlayer;
+    }
+
+    public void setConcernedPlayer(Player concernedPlayer) {
+        this.concernedPlayer = concernedPlayer;
     }
 
     /*

@@ -12,11 +12,14 @@ public class Voleur extends Card {
 
     //private final int[] nbPlayersVoleur = {4, 7, 13};
 
+    private Player concernedPlayer;
+    private Bank bank;
+
     public Voleur(){
 
     }
 
-    public void activePower(Player concernedPlayer, Bank bank){
+    public void activePower(){
         int nbPlayers = bank.getNbPlayers();
         int idConcernedPlayer = concernedPlayer.getId();
         ArrayList<Player> playerArrayList = bank.getListPlayers();
@@ -46,6 +49,22 @@ public class Voleur extends Card {
             leftPlayer.setNbMoney(leftPlayer.getNbMoney() - 1);
             concernedPlayer.setNbMoney(concernedPlayer.getNbMoney() + 1);
         }
+    }
+
+    public Player getConcernedPlayer() {
+        return concernedPlayer;
+    }
+
+    public void setConcernedPlayer(Player concernedPlayer) {
+        this.concernedPlayer = concernedPlayer;
+    }
+
+    public Bank getBank() {
+        return bank;
+    }
+
+    public void setBank(Bank bank) {
+        this.bank = bank;
     }
 
     /*

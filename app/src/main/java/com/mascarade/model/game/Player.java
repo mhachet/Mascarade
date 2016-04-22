@@ -46,7 +46,7 @@ public class Player {
             trueCard = true;
             Card cardActived = this.getCard();
             Log.d(PLAYER, "Correct => annouced  : " + announcedCard + " playerCard : " + this.getTypeCard());
-            cardActived.activePower(this);
+            cardActived.activePower();
         }
         else{
             this.setNbMoney(this.getNbMoney() - 1);
@@ -75,9 +75,7 @@ public class Player {
 
         if(swap) {
             Card opponentCard = opponent.getCard();
-            Card tempCard = new Card();
-
-            tempCard = this.getCard();
+            Card tempCard = this.getCard();
             this.setCard(opponentCard);
             opponent.setCard(tempCard);
         }

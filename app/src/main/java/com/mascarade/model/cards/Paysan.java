@@ -9,6 +9,10 @@ public class Paysan extends Card {
 
    // private final int[] nbPlayersPaysan = {8, 9, 10, 11, 12, 13};
 
+    private boolean otherPaysan;
+    private Player concernedPlayer;
+    private Player partnerPlayer;
+
     public Paysan() {
 
     }
@@ -20,11 +24,9 @@ public class Paysan extends Card {
      * concerned card need to be visible for all
      * partner too if revealed
      *
-     * @param otherPaysan
-     * @param concernedPlayer
-     * @param partnerPlayer
+     * boolean otherPaysan, Player concernedPlayer, Player partnerPlayer
      */
-    public void activePower(boolean otherPaysan, Player concernedPlayer, Player partnerPlayer){
+    public void activePower(){
 
 
         Card partnerCard = partnerPlayer.getCard();
@@ -42,8 +44,31 @@ public class Paysan extends Card {
 
     }
 
+    public Player getPartnerPlayer() {
+        return partnerPlayer;
+    }
 
-    /*public int[] getNbPlayersPaysan() {
+    public void setPartnerPlayer(Player partnerPlayer) {
+        this.partnerPlayer = partnerPlayer;
+    }
+
+    public boolean isOtherPaysan() {
+        return otherPaysan;
+    }
+
+    public void setOtherPaysan(boolean otherPaysan) {
+        this.otherPaysan = otherPaysan;
+    }
+
+    public Player getConcernedPlayer() {
+        return concernedPlayer;
+    }
+
+    public void setConcernedPlayer(Player concernedPlayer) {
+        this.concernedPlayer = concernedPlayer;
+    }
+
+/*public int[] getNbPlayersPaysan() {
         return nbPlayersPaysan;
     }
     */

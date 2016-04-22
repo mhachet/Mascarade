@@ -18,75 +18,17 @@ import java.util.ArrayList;
 /**
  * Created by melanie on 12/03/16.
  */
-public class Card {
+public abstract class Card {
 
     protected boolean visibleAll = false;
     protected boolean visiblePlayer = false;
     private final String CARD = "CARD";
-    protected Bank bank;
-    protected Activity boardMascarade;
-
-    //protected String imageLabelPath = "";
 
     public Card() {
 
     }
 
-    public void activePower(Player playerConcerned) {
-       /*
-        String rolePlayer = playerConcerned.getCardType();
-        Log.d(CARD, "activation of player role " + rolePlayer);
-
-        if(rolePlayer.equals("Juge")) {
-            Juge cardJugePlayer = (Juge)playerConcerned.getCard();
-            cardJugePlayer.activePower(playerConcerned);
-        }
-        else if(rolePlayer.equals("Espionne")) {
-            Espionne cardEspionnePlayer = (Espionne)playerConcerned.getCard();
-            //cardEspionnePlayer.activePower(playerConcerned, playerOpponent, changeCards);
-        }
-        else if(rolePlayer.equals("Eveque")) {
-            Eveque cardEvequePlayer = (Eveque)playerConcerned.getCard();
-            cardEvequePlayer.activePower(playerConcerned, this.getBank());
-        }
-        else if(rolePlayer.equals("Fou")) {
-            Fou cardFouPlayer = (Fou)playerConcerned.getCard();
-            //cardFouPlayer.activePower(playerConcerned, firstPlayer, secondPlayer, activeChange);
-        }
-        else if(rolePlayer.equals("Inquisiteur")) {
-            Inquisiteur cardInquisiteurPlayer = (Inquisiteur)playerConcerned.getCard();
-            //cardInquisiteurPlayer.activePower(); not done
-        }
-        else if(rolePlayer.equals("Paysan")) {
-            Paysan cardPaysanPlayer = (Paysan)playerConcerned.getCard();
-            //cardPaysanPlayer.activePower(otherPaysan, concernedPlayer, partnerPlayer);
-        }
-        else if(rolePlayer.equals("Reine")) {
-            Reine cardReinePlayer = (Reine)playerConcerned.getCard();
-            cardReinePlayer.activePower(playerConcerned);
-        }
-        else if(rolePlayer.equals("Roi")) {
-            Roi cardRoiPlayer = (Roi)playerConcerned.getCard();
-            cardRoiPlayer.activePower(playerConcerned);
-        }
-        else if(rolePlayer.equals("Sorciere")) {
-            Sorciere cardSorcierePlayer = (Sorciere)playerConcerned.getCard();
-            //cardSorcierePlayer.activePower(playerConcerned, opponentPlayer);
-        }
-        else if(rolePlayer.equals("Tricheur")) {
-            Tricheur cardTricheurPlayer = (Tricheur)playerConcerned.getCard();
-            cardTricheurPlayer.activePower(playerConcerned, this.getBank());
-        }
-        else if(rolePlayer.equals("Veuve")) {
-            Veuve cardVeuvePlayer = (Veuve)playerConcerned.getCard();
-            cardVeuvePlayer.activePower(playerConcerned);
-        }
-        else if(rolePlayer.equals("Voleur")) {
-            Voleur cardVoleurPlayer = (Voleur)playerConcerned.getCard();
-            cardVoleurPlayer.activePower(playerConcerned, this.getBank());
-        }
-*/
-    }
+    public abstract void activePower();
 
     public Bitmap getLabelCard(String imageLabelPath){
         BitmapFactory.Options options = new BitmapFactory.Options();
@@ -214,19 +156,4 @@ public class Card {
         this.visiblePlayer = visiblePlayer;
     }
 
-    public Bank getBank() {
-        return bank;
-    }
-
-    public void setBank(Bank bank) {
-        this.bank = bank;
-    }
-
-    public Activity getBoardMascarade() {
-        return boardMascarade;
-    }
-
-    public void setBoardMascarade(Activity boardMascarade) {
-        this.boardMascarade = boardMascarade;
-    }
 }

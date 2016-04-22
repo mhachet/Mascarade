@@ -575,42 +575,6 @@ public class PlateauMascarade extends Activity {
         return idImage;
     }
 
-    public void fouPower(Bank game) {
-        boolean changeCards = true;
-        Player playerFou = game.getPlayerWithCard("Fou");
-        Fou fou = (Fou) playerFou.getCard();
-        Player firstPlayer = game.getRandomPlayer();
-        Player secondPlayer = game.getRandomPlayer();
-        while (firstPlayer.equals(playerFou)) {
-            firstPlayer = game.getRandomPlayer();
-        }
-        while (secondPlayer.equals(playerFou) || secondPlayer.equals(firstPlayer)) {
-            secondPlayer = game.getRandomPlayer();
-        }
-        fou.activePower(playerFou, firstPlayer, secondPlayer, changeCards);
-
-    }
-
-    public boolean espionnePower(Bank game, boolean exchange) {
-        boolean exchangeDone = false;
-        Player playerEspion = game.getPlayerWithCard("Espionne");
-        Espionne espion = (Espionne) playerEspion.getCard();
-        Log.d(PLATEAU, "espion est : " + playerEspion.getId() + "  " + playerEspion.getTypeCard());
-        int idPlayerEspion = playerEspion.getId();
-        Player opponentPlayer = null;
-        if (idPlayerEspion < game.getListPlayers().size() - 1) {
-            opponentPlayer = game.getListPlayers().get(idPlayerEspion + 1);
-        } else {
-            opponentPlayer = game.getListPlayers().get(idPlayerEspion - 1);
-        }
-        Log.d(PLATEAU, "playerOpponent : " + opponentPlayer.getId() + "  " + opponentPlayer.getTypeCard());
-        espion.activePower(playerEspion, opponentPlayer, exchange);
-        exchangeDone = true;
-
-
-        return exchangeDone;
-    }
-
     public Tribunal getTribunal() {
         return tribunal;
     }

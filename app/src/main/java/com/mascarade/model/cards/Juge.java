@@ -10,6 +10,10 @@ public class Juge extends Card {
 
     //private final int[] nbPlayersJuge = {4, 5, 6, 7, 8, 9, 10, 11, 12, 13};
 
+    private Player concernedPlayer;
+    private Tribunal tribunal;
+
+
     public Juge(){
     }
 
@@ -17,15 +21,30 @@ public class Juge extends Card {
     /**
      * The Juge power is to get all tribunal money
      *
-     * @param concernedPlayer
-     * @param tribunal
+     * Player concernedPlayer, Tribunal tribunal
      */
-    public int activePower(Player concernedPlayer, Tribunal tribunal) {
+    public void activePower() {
         int tribunalMoney = tribunal.getNbMoney();
         concernedPlayer.setNbMoney(concernedPlayer.getNbMoney() + tribunalMoney);
         tribunal.setNbMoney(0);
 
-        return tribunalMoney;
+        //return tribunalMoney;
+    }
+
+    public Player getConcernedPlayer() {
+        return concernedPlayer;
+    }
+
+    public void setConcernedPlayer(Player concernedPlayer) {
+        this.concernedPlayer = concernedPlayer;
+    }
+
+    public Tribunal getTribunal() {
+        return tribunal;
+    }
+
+    public void setTribunal(Tribunal tribunal) {
+        this.tribunal = tribunal;
     }
 
     //public int[] getNbPlayersJuge() {return nbPlayersJuge;}

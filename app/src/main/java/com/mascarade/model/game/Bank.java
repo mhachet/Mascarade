@@ -91,7 +91,7 @@ public class Bank {
         ArrayList<Player> playersList = new ArrayList<>();
 
         while (index < nbPlayers) {
-            Player player = new Player(6, new Card(), index, boardMascarade);
+            Player player = new Player(6, null, index, boardMascarade);
             player.setName("Player " + index);
             playersList.add(player);
             index++;
@@ -124,7 +124,7 @@ public class Bank {
             Log.d(MASCARADE, "random : " + indexRandom + "  cardsDone  " + cardsDone.toString());
             if (!cardsDone.contains(indexRandom)) {
                 Card card = cardsList.get(indexRandom);
-                card.setBank(this);
+                //card.setBank(this);
                 cardsDone.add(indexRandom);
                 player.setCard(card);
                 if (nbPlayers < 6) {

@@ -221,7 +221,10 @@ public class Round {
                 })
                 .setNegativeButton("Non", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        paysanCardPlayerConcerned.activePower(false, playerConcerned, null);
+                        paysanCardPlayerConcerned.setConcernedPlayer(playerConcerned);
+                        paysanCardPlayerConcerned.setOtherPaysan(false);
+                        paysanCardPlayerConcerned.setPartnerPlayer(null);
+                        paysanCardPlayerConcerned.activePower();
                     }
                 });
         builder.create();
@@ -235,14 +238,26 @@ public class Round {
     public void activePowerJuge(Player playerConcerned){
         TextView textViewInstruction = (TextView)boardMascarade.findViewById(R.id.textView_instructions);
         Juge jugeCardPlayerConcerned = (Juge)playerConcerned.getCard();
-        int tribunalMoney = jugeCardPlayerConcerned.activePower(playerConcerned, tribunal);
+
+        int tribunalMoney = tribunal.getNbMoney();
+
+        jugeCardPlayerConcerned.setConcernedPlayer(playerConcerned);
+        jugeCardPlayerConcerned.setTribunal(tribunal);
+        jugeCardPlayerConcerned.activePower();
+
         textViewInstruction.setText("Vous récupérez " + tribunalMoney + " du tribunal.");
     }
 
     public void activePowerEveque(Player playerConcerned){
         TextView textViewInstruction = (TextView)boardMascarade.findViewById(R.id.textView_instructions);
         Eveque evequeCardPlayerConcerned = (Eveque)playerConcerned.getCard();
-        int nbMoneyRetrieved = evequeCardPlayerConcerned.activePower(playerConcerned, bank);
+        evequeCardPlayerConcerned.setConcernedPlayer(playerConcerned);
+        evequeCardPlayerConcerned.setBank(bank);
+
+        evequeCardPlayerConcerned.activePower();
+
+        int nbMoneyRetrieved = evequeCardPlayerConcerned.getNbMoneyRetrieved();
+
         String nameRichestPlayer = evequeCardPlayerConcerned.findRichestPlayers(bank).get(0).getName();
         textViewInstruction.setText("Vous prenez " + nbMoneyRetrieved + " à " + nameRichestPlayer);
 
@@ -359,7 +374,10 @@ public class Round {
                     Player opponentPlayer = bank.getPlayerWithCard(cardOpponent.getTypeCard());
                     textViewInstructions.setText("Vous avez sélectionné le " + opponentPlayer.getName() + " pour échanger votre or.");
                     Sorciere playerConcernedCard = (Sorciere) playerConcerned.getCard();
-                    playerConcernedCard.activePower(playerConcerned, opponentPlayer);
+                    playerConcernedCard.setConcernedPlayer(playerConcerned);
+                    playerConcernedCard.setOpponentPlayer(opponentPlayer);
+                    playerConcernedCard.activePower();
+
                 } else if (typeCardPlayerConcerned.equals("Espionne")) {
                     textViewInstructions.setText("Carte espionne");
                 } else if (typeCardPlayerConcerned.equals("Eveque")) {
@@ -380,7 +398,10 @@ public class Round {
                         paysanPartnerImageView.setImageResource(R.drawable.paysan_card);
 
                         Paysan playerConcernedCard = (Paysan) playerConcerned.getCard();
-                        playerConcernedCard.activePower(true, playerConcerned, partnerPlayer);
+                        playerConcernedCard.setConcernedPlayer(playerConcerned);
+                        playerConcernedCard.setPartnerPlayer(partnerPlayer);
+                        playerConcernedCard.setOtherPaysan(true);
+                        playerConcernedCard.activePower();
                     }
 
 
