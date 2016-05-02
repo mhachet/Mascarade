@@ -39,14 +39,6 @@ public class AccueilMascarade extends Activity {
         leaveButton.setOnClickListener(new ButtonLeaveOnClickListener(leaveButton));
 
     }
-    public void evequePower(Bank bank) {
-        Player playerEveque = bank.getPlayerWithCard("Eveque");
-        Eveque eveque = (Eveque) playerEveque.getCard();
-        Log.d(MASCARADE, "eveque est : " + playerEveque.getId() + "  " + playerEveque.getTypeCard());
-
-        eveque.activePower(playerEveque, bank);
-
-    }
 
     class ButtonOnClickListener implements View.OnClickListener{
         private final Button button;

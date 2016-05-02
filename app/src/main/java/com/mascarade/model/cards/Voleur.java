@@ -16,10 +16,19 @@ public class Voleur extends Card {
     private Bank bank;
 
     public Voleur(){
-
+        super();
     }
 
-    public void activePower(){
+    /**
+     * Get 1 gold from him right player and 1 from him left player
+     *
+     * @param concernedPlayer
+     * @param bank
+     */
+    public void activePower(Player concernedPlayer, Bank bank){
+        this.setConcernedPlayer(concernedPlayer);
+        this.setBank(bank);
+
         int nbPlayers = bank.getNbPlayers();
         int idConcernedPlayer = concernedPlayer.getId();
         ArrayList<Player> playerArrayList = bank.getListPlayers();

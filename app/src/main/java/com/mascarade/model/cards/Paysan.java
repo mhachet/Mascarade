@@ -1,5 +1,10 @@
 package com.mascarade.model.cards;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.widget.TextView;
+
+import com.mascarade.R;
 import com.mascarade.model.game.Player;
 
 /**
@@ -26,11 +31,13 @@ public class Paysan extends Card {
      *
      * boolean otherPaysan, Player concernedPlayer, Player partnerPlayer
      */
-    public void activePower(){
-
+    public void activePower(Player concernedPlayer, Player partnerPlayer,boolean otherPaysan){
+        this.setConcernedPlayer(concernedPlayer);
+        this.setPartnerPlayer(partnerPlayer);
+        this.setOtherPaysan(otherPaysan);
 
         Card partnerCard = partnerPlayer.getCard();
-        Card concernedCard = concernedPlayer.getCard();
+        //Card concernedCard = concernedPlayer.getCard();
 
         if(!otherPaysan){
             concernedPlayer.setNbMoney(concernedPlayer.getNbMoney() + 1);

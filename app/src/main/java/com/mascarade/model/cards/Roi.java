@@ -15,12 +15,24 @@ public class Roi extends Card {
     private Player concernedPlayer;
 
     public Roi() {
-        //this.initialiseNbPlayers(nbPlayersRoi);
+        super();
     }
 
-    public void activePower(){
+    public Roi (Player concernedPlayer){
+        this.concernedPlayer = concernedPlayer;
+    }
+
+    public void activePower(Player concernedPlayer){
+        this.setConcernedPlayer(concernedPlayer);
         concernedPlayer.setNbMoney(concernedPlayer.getNbMoney() + 3);
         Log.d(ROI, " money player : " + concernedPlayer.getNbMoney());
     }
 
+    public Player getConcernedPlayer() {
+        return concernedPlayer;
+    }
+
+    public void setConcernedPlayer(Player concernedPlayer) {
+        this.concernedPlayer = concernedPlayer;
+    }
 }

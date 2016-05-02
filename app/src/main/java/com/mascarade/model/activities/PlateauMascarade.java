@@ -142,7 +142,8 @@ public class PlateauMascarade extends Activity {
             ArrayList<Card> cardsCenter = bank.getBankCardsCenter();
             for(int j = 0 ; j < cardsCenter.size() ; j++){
                 Card cardCenter = cardsCenter.get(j);
-                String idCard = "_center_" + j + 1;
+                int numberCardCenter = j + 1;
+                String idCard = "center_" + numberCardCenter;
                 //Log.d(PLATEAU, "sizeCardsCenter : " + cardCenter.getTypeCard());
                 zeroRound.hideCard(cardCenter, idCard, this);
             }
@@ -367,7 +368,7 @@ public class PlateauMascarade extends Activity {
 
         ImageView cardImageView = new ImageView(this);
         cardImageView.setTag("imageViewCard_" + firstCardCenter.getTypeCard() + "_center_1");
-        Log.d(PLATEAU, "cardViewTag Board : " + cardImageView.getTag() + "_center_1");
+        Log.d(PLATEAU, "cardViewTag Board : " + cardImageView.getTag());
         cardImageView.setImageResource(firstCardCenter.getIdCardImageFromCard());
         cardImageView.setLayoutParams(linearLayoutWrapContent);
         cardImageView.getLayoutParams().height = 250;
@@ -414,7 +415,7 @@ public class PlateauMascarade extends Activity {
 
         ImageView cardImageView = new ImageView(this);
         cardImageView.setTag("imageViewCard_" + secondCardCenter.getTypeCard() + "_center_2");
-        Log.d(PLATEAU, "cardViewTag Board : " + cardImageView.getTag() + "_center_2");
+        Log.d(PLATEAU, "cardViewTag Board : " + cardImageView.getTag());
         cardImageView.setImageResource(secondCardCenter.getIdCardImageFromCard());
         cardImageView.setLayoutParams(linearLayoutWrapContent);
         cardImageView.getLayoutParams().height = 250;

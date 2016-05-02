@@ -15,6 +15,7 @@ public class Juge extends Card {
 
 
     public Juge(){
+        super();
     }
 
 
@@ -23,7 +24,10 @@ public class Juge extends Card {
      *
      * Player concernedPlayer, Tribunal tribunal
      */
-    public void activePower() {
+    public void activePower(Player concernedPlayer, Tribunal tribunal) {
+        this.setConcernedPlayer(concernedPlayer);
+        this.setTribunal(tribunal);
+
         int tribunalMoney = tribunal.getNbMoney();
         concernedPlayer.setNbMoney(concernedPlayer.getNbMoney() + tribunalMoney);
         tribunal.setNbMoney(0);

@@ -1,7 +1,10 @@
 package com.mascarade.model.game;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mascarade.R;
@@ -23,39 +26,73 @@ public class Player {
     private String lastCardKnown = "inconnu";
     private static final String PLAYER = "PLAYER";
 
-    public Player(int nbMoney, Card card, int id, Activity boardMascarade) {
+    public Player(int nbMoney, Card card, int id) {
         this.card = card;
         this.nbMoney = nbMoney;
         this.id = id;
-        this.boardMascarade = boardMascarade;
     }
 
     /**
-     *
      * First power : to announce its card
      * if correct : card power is activated
      * else : player must pay 1 gold coin
      *
+     *
      * @param announcedCard
+     * @param tribunal
      * @return
      */
-    public boolean annoucementCard(String announcedCard, Tribunal tribunal){
-        boolean trueCard = false;
+    public boolean announceCard(String announcedCard, final Tribunal tribunal){
+        boolean announceCorrect = false;
+
+        String cardPlayer = this.getTypeCard();
+        Log.d(PLAYER, "player : " + this.getName());
+        TextView textViewInstruction = (TextView)boardMascarade.findViewById(R.id.textView_instructions);
 
         if(announcedCard.equals(this.getTypeCard())){
-            trueCard = true;
+
             Card cardActived = this.getCard();
-            Log.d(PLAYER, "Correct => annouced  : " + announcedCard + " playerCard : " + this.getTypeCard());
-            cardActived.activePower();
+
+            String idMainPlayer = Integer.toString(this.getId());
+            Log.d(PLAYER, "good choice " + announcedCard + "  -  " + cardPlayer);
+            showCard(this.getCard(), idMainPlayer, boardMascarade);
+
+            cardActived.setBoardMascarade(boardMascarade);
+            cardActived.setPlayer(this);
+
+            textViewInstruction.setText("Quelle mémoire ! ");
+            //cardActived.activePower();
+
+            announceCorrect = true;
+
+        } else {
+            textViewInstruction.setText("Mauvais choix ! Vous n'êtes pas un(e) " + announcedCard);
+            final Player player = this;
+            Log.d(PLAYER, "bad choice " + announcedCard + "  -  " + cardPlayer);
+            AlertDialog.Builder builder = new AlertDialog.Builder(boardMascarade);
+            builder.setTitle("Vous vous êtes trompé de rôle");
+            builder.setMessage("Vous donnez 1 pièce d'or au Tribunal")
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            boolean transaction = tribunal.getMoneyFromPlayer(player);
+                            Log.d(PLAYER, "player has enough gold to give to the tribunal : " + transaction);
+                            // give 1 gold to the "Tribunal"
+                        }
+                    });
+            builder.create();
+            builder.show();
+            textViewInstruction.setText("Le tribunal vous prend 1 pièce d'or.");
         }
-        else{
-            this.setNbMoney(this.getNbMoney() - 1);
-            tribunal.setNbMoney(tribunal.getNbMoney() + 1);
-            Log.d(PLAYER, "Wrong => annouced  : " + announcedCard + " playerCard : " + this.getTypeCard());
-        }
-        return trueCard;
+
+        return announceCorrect;
     }
 
+    public void showCard(Card cardPlayer, String idCard, Activity boardMascarade){
+        String idStringImageView = "imageViewCard_" + cardPlayer.getTypeCard() + "_" + idCard;
+        int idCardImage = cardPlayer.getIdCardImageFromCard();
+        ImageView cardView = (ImageView)boardMascarade.findViewById(R.id.linearLayout_horiz_5players).findViewWithTag(idStringImageView);
+        cardView.setImageResource(idCardImage);
+    }
     /**
      * Second player power is to see its own card
      */
@@ -92,7 +129,7 @@ public class Player {
     public void setNbMoney(int nbMoney) {
         String idStringTextViewGold = "gold_player_" + this.getId();
         TextView textViewGoldPlayer = (TextView)boardMascarade.findViewById(R.id.linearLayout_horiz_5players).findViewWithTag(idStringTextViewGold);
-        Log.d(PLAYER, "textView before : " + textViewGoldPlayer.getText() + " " + this.getName());
+        //Log.d(PLAYER, "textView before : " + textViewGoldPlayer.getText() + " " + this.getName());
 
         textViewGoldPlayer.setText(Integer.toString(nbMoney));
         this.nbMoney = nbMoney;
@@ -121,6 +158,14 @@ public class Player {
     public void setId(int id) {
 
         this.id = id;
+    }
+
+    public Activity getBoardMascarade() {
+        return boardMascarade;
+    }
+
+    public void setBoardMascarade(Activity boardMascarade) {
+        this.boardMascarade = boardMascarade;
     }
 
     public String getCardType() {

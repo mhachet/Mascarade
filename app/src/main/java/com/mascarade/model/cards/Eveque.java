@@ -20,8 +20,7 @@ public class Eveque extends Card {
     private int nbMoneyRetrieved = 0;
 
     public Eveque() {
-
-
+        super();
     }
 
     /**
@@ -30,7 +29,10 @@ public class Eveque extends Card {
      *
      * Player concernedPlayer, Bank bank
      */
-    public void activePower() {
+    public Player activePower(Player concernedPlayer, Bank bank) {
+        this.setConcernedPlayer(concernedPlayer);
+        this.setBank(bank);
+
         int moneyRetrieved = 0;
         //int maxMoney = this.findMaxMoneyOfPlayers(bank);
         List<Player> richestPlayers = this.findRichestPlayers(bank);
@@ -51,7 +53,7 @@ public class Eveque extends Card {
 
         this.setNbMoneyRetrieved(moneyRetrieved);
 
-        //return moneyRetrieved;
+        return opponentPlayer;
     }
 
     public int findMaxMoneyOfPlayers(Bank bank) {
@@ -60,7 +62,7 @@ public class Eveque extends Card {
         for (int p = 0; p < playerArrayList.size(); p++) {
             Player player = playerArrayList.get(p);
             int moneyPlayer = player.getNbMoney();
-            if (max <= moneyPlayer) {
+            if (!player.isPlayer() && (max <= moneyPlayer)) {
                 max = moneyPlayer;
             }
         }
@@ -74,15 +76,13 @@ public class Eveque extends Card {
         ArrayList<Player> richestPlayers = new ArrayList<>();
         for (int p = 0; p < playerArrayList.size(); p++) {
             Player player = playerArrayList.get(p);
-            if(!player.equals(this)) {
-                Log.d(EVEQUE, "richest player in eveque" + player.getName());
+            if(!player.equals(concernedPlayer)) {
                 int moneyPlayer = player.getNbMoney();
+                //Log.d(EVEQUE, "richest player in eveque is " + player.getName() + "  " + maxMoney + "  " + moneyPlayer);
                 if (maxMoney == moneyPlayer) {
+                    Log.d(EVEQUE, "is richest " + player.getName());
                     richestPlayers.add(player);
                 }
-            }
-            else{
-                Log.d(EVEQUE, "main player in eveque" + player.getName());
             }
         }
         return richestPlayers;

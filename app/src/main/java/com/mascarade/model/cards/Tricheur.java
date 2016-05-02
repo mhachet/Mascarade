@@ -1,5 +1,8 @@
 package com.mascarade.model.cards;
 
+import android.widget.TextView;
+
+import com.mascarade.R;
 import com.mascarade.model.game.Bank;
 import com.mascarade.model.game.Player;
 
@@ -14,18 +17,28 @@ public class Tricheur extends Card {
     private Bank bank;
 
     public Tricheur() {
+        super();
     }
 
     /**
-     * The 'Tricheur' power is to wi if the player has 10 or more gold coin.
+     * The 'Tricheur' power is to win if the player has 10 or more gold coin.
      *
      */
-    public void activePower(){
+    public boolean activePower(Player concernedPlayer, Bank bank){
+        this.setConcernedPlayer(concernedPlayer);
+        this.setBank(bank);
+
+        boolean isWinner = false;
+
+        TextView textViewInstruction = (TextView)boardMascarade.findViewById(R.id.textView_instructions);
         int nbMoneyPlayer = concernedPlayer.getNbMoney();
 
         if(nbMoneyPlayer >= 10){
             bank.setWinner(concernedPlayer);
+            isWinner = true;
         }
+
+        return isWinner;
     }
 
     public Player getConcernedPlayer() {

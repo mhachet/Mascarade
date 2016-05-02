@@ -19,8 +19,7 @@ public class Espionne extends Card {
     private boolean changeCards;
 
     public Espionne() {
-
-        //this.initialiseNbPlayers(nbPlayersEspionne);
+        super();
     }
 
     /**
@@ -28,7 +27,11 @@ public class Espionne extends Card {
      * and his/her card in order to change (or not) theses two cards.
      * Player espionnePlayer, Player opponent, boolean changeCards
      */
-    public void activePower() {
+    public void activePower(Player espionnePlayer, Player opponent, boolean changeCards) {
+        this.setOpponent(opponent);
+        this.setPlayer(espionnePlayer);
+        this.setChangeCards(changeCards);
+
         Card concernedPlayerCard = espionnePlayer.getCard();
         Card opponentPlayerCard = opponent.getCard();
 

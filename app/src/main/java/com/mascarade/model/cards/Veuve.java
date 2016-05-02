@@ -12,14 +12,15 @@ public class Veuve extends Card {
     private Player concernedPlayer;
 
     public Veuve() {
-
+        super();
     }
 
     /**
      * The 'Veuve' power allow to win gold coins until 10.
      *
      */
-    public void activePower(){
+    public void activePower(Player concernedPlayer){
+        this.setConcernedPlayer(concernedPlayer);
 
         concernedPlayer.setNbMoney(10);
     }

@@ -19,7 +19,10 @@ public class Sorciere extends Card {
      * The "Sorciere" power is to change all her own gold with another player.
      *
      */
-    public void activePower(){
+    public void activePower(Player concernedPlayer, Player opponentPlayer){
+        this.setConcernedPlayer(concernedPlayer);
+        this.setOpponentPlayer(opponentPlayer);
+
         int nbMoneyConcerned = concernedPlayer.getNbMoney();
         int nbMoneyOpponent = opponentPlayer.getNbMoney();
 

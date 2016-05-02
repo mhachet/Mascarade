@@ -16,8 +16,7 @@ public class Fou extends Card {
     private boolean activeChange;
 
     public Fou() {
-
-
+        super();
     }
 
 

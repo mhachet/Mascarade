@@ -20,6 +20,9 @@ import java.util.ArrayList;
  */
 public abstract class Card {
 
+    protected Activity boardMascarade;
+
+    protected Player concernedPlayer;
     protected boolean visibleAll = false;
     protected boolean visiblePlayer = false;
     private final String CARD = "CARD";
@@ -28,7 +31,7 @@ public abstract class Card {
 
     }
 
-    public abstract void activePower();
+    //public abstract void activePower();
 
     public Bitmap getLabelCard(String imageLabelPath){
         BitmapFactory.Options options = new BitmapFactory.Options();
@@ -131,6 +134,21 @@ public abstract class Card {
         return idImage;
     }
 
+    public Activity getBoardMascarade() {
+        return boardMascarade;
+    }
+
+    public void setBoardMascarade(Activity boardMascarade) {
+        this.boardMascarade = boardMascarade;
+    }
+
+    public Player getPlayer() {
+        return concernedPlayer;
+    }
+
+    public void setPlayer(Player player) {
+        this.concernedPlayer = player;
+    }
 
     public void exchangeCards(Player playerOne, Player playerTwo) {
 

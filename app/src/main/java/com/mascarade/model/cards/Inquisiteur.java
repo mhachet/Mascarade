@@ -11,10 +11,9 @@ public class Inquisiteur extends Card {
     private Player opponenentPlayer;
 
     public Inquisiteur(){
-
+        super();
     }
 
-    @Override
     public void activePower() {
 
     }
