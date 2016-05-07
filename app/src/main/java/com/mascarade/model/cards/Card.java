@@ -33,6 +33,36 @@ public abstract class Card {
 
     //public abstract void activePower();
 
+    /**
+     * Hide card's player
+     *
+     * @param idPlayer
+     * @param boardMascarade
+     */
+    public void hideCard(String idPlayer, Activity boardMascarade){
+        String idStringImageView = "imageViewCard_" + this.getTypeCard() + "_" + idPlayer;
+        Log.d(CARD, "idStringImageView : " + idStringImageView);
+        ImageView cardView = (ImageView)boardMascarade.findViewById(R.id.linearLayout_horiz_5players).findViewWithTag(idStringImageView);
+        cardView.setImageResource(R.drawable.card_darkside);
+
+    }
+
+    /**
+     *
+     * Show player's card
+     *
+     * @param idCard
+     * @param boardMascarade
+     */
+    public void showCard(String idCard, Activity boardMascarade){
+        String idStringImageView = "imageViewCard_" + this.getTypeCard() + "_" + idCard;
+        Log.d(CARD, "idStringImageView Card : " + idStringImageView);
+        int idCardImage = this.getIdCardImageFromCard();
+        ImageView cardView = (ImageView)boardMascarade.findViewById(R.id.linearLayout_horiz_5players).findViewWithTag(idStringImageView);
+        cardView.setImageResource(idCardImage);
+        this.setVisiblePlayer(true);
+    }
+
     public Bitmap getLabelCard(String imageLabelPath){
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inPreferredConfig = Bitmap.Config.ARGB_8888;

@@ -1,6 +1,5 @@
 package com.mascarade.model.game;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.util.Log;
@@ -13,6 +12,7 @@ import android.widget.TextView;
 import com.mascarade.R;
 import com.mascarade.model.activities.PlateauMascarade;
 import com.mascarade.model.cards.Card;
+import com.mascarade.model.cards.Espionne;
 import com.mascarade.model.cards.Eveque;
 import com.mascarade.model.cards.Juge;
 import com.mascarade.model.cards.Paysan;
@@ -34,6 +34,8 @@ public class Round {
     private PlateauMascarade boardMascarade;
     private Bank bank;
     private Tribunal tribunal;
+    private String actionChoosen = "";
+    private Player opponentPlayer;
 
     private final static String ROUND = "ROUND";
 
@@ -45,55 +47,55 @@ public class Round {
     }
 
     public void activeChangeCardButton(){
-        Button changeCard = (Button)boardMascarade.findViewById(R.id.button_changeCard);
-        changeCard.setOnClickListener(new ButtonChangeCardOnClickListener(changeCard));
+        Button buttonChangeCard = (Button)boardMascarade.findViewById(R.id.button_changeCard);
+        buttonChangeCard.setOnTouchListener(new ButtonChangeCardOnClickListener());
     }
 
     public void activeSeeCardButton(){
         Button seeCardButton = (Button)boardMascarade.findViewById(R.id.button_seeCard);
-        seeCardButton.setOnClickListener(new ButtonSeeCardOnClickListener(seeCardButton));
+        seeCardButton.setOnTouchListener(new ButtonSeeCardOnClickListener(seeCardButton, bank.getMainPlayer()));
     }
 
     public void activeAnnounceCardButton(){
         Button announceCardButton = (Button)boardMascarade.findViewById(R.id.button_announceCard);
-        announceCardButton.setOnClickListener(new ButtonAnnounceCardOnClickListener(announceCardButton, boardMascarade));
+        announceCardButton.setOnTouchListener(new ButtonAnnounceCardOnClickListener(announceCardButton, boardMascarade));
 
     }
 
-    public void hideCard(Card playerCard, String idCard, Activity boardMascarade){
+    class ButtonChangeCardOnClickListener implements View.OnTouchListener{
 
-        String idStringImageView = "imageViewCard_" + playerCard.getTypeCard() + "_" + idCard;
-        Log.d(ROUND, "idStringImageViewCard : " + idStringImageView);
-        ImageView cardView = (ImageView)boardMascarade.findViewById(R.id.linearLayout_horiz_5players).findViewWithTag(idStringImageView);
-        Log.d(ROUND, "cardViewTag : " + cardView.getTag());
-        cardView.setImageResource(R.drawable.card_darkside);
+        ButtonChangeCardOnClickListener(){
 
-    }
-
-    class ButtonChangeCardOnClickListener implements View.OnClickListener{
-
-        private final Button buttonChangeCard;
-
-        ButtonChangeCardOnClickListener(Button button){
-            this.buttonChangeCard = button;
         }
+
+
         @Override
-        public void onClick(View v){
+        public boolean onTouch(View v, MotionEvent event) {
+            TextView textViewInstruction = (TextView)boardMascarade.findViewById(R.id.textView_instructions);
+            textViewInstruction.setText("Vous souhaitez échanger votre carte avec un autre joueur.");
+            Player mainPlayer = bank.getMainPlayer();
+            activateListenersCards(mainPlayer, "change");
 
+            setActionChoosen("change");
+
+            return false;
         }
     }
 
-    class ButtonAnnounceCardOnClickListener implements View.OnClickListener{
+    class ButtonAnnounceCardOnClickListener implements View.OnTouchListener{
 
         private final Button buttonAnnounceCard;
         private final PlateauMascarade boardMascarade;
+        private static final boolean cardChange = false;
 
         ButtonAnnounceCardOnClickListener(Button buttonAnnounceCard, PlateauMascarade boardMascarade){
             this.buttonAnnounceCard = buttonAnnounceCard;
             this.boardMascarade = boardMascarade;
         }
         @Override
-        public void onClick(View v){
+        public boolean onTouch(View v, MotionEvent event){
+
+            setActionChoosen("power");
 
             final TextView textViewInstruction = (TextView)boardMascarade.findViewById(R.id.textView_instructions);
             textViewInstruction.setText("Vous souhaitez activer le pouvoir de votre carte.");
@@ -116,7 +118,7 @@ public class Round {
                     final String cardChosen = charSequenceCards[which].toString();
                     boolean announcementIsCorrect = mainPlayer.announceCard(cardChosen, tribunal);
 
-                    if(announcementIsCorrect){
+                    if (announcementIsCorrect) {
                         activePowerPlayer(mainPlayer);
                     }
 
@@ -126,21 +128,36 @@ public class Round {
 
             AlertDialog roleCardChoicePlayerAlert = roleCardChoicePlayerBuilder.create();
             roleCardChoicePlayerAlert.show();
+
+            return false;
         }
     }
 
-    class ButtonSeeCardOnClickListener implements View.OnClickListener{
+    class ButtonSeeCardOnClickListener implements View.OnTouchListener{
 
         private final Button buttonSeeCard;
+        private Player playerConcerned;
 
-        ButtonSeeCardOnClickListener(Button button){
+        ButtonSeeCardOnClickListener(Button button, Player playerConcerned){
             this.buttonSeeCard = button;
+            this.playerConcerned = playerConcerned;
         }
-        @Override
-        public void onClick(View v){
 
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            setActionChoosen("see");
+
+            TextView textViewInstructions = (TextView) boardMascarade.findViewById(R.id.textView_instructions);
+
+            final Card cardPlayerConcerned = playerConcerned.getCard();
+            final String idCard = Integer.toString(playerConcerned.getId());
+            cardPlayerConcerned.showCard(idCard, boardMascarade);
+
+            return false;
         }
     }
+
+
 
     public void activePowerPlayer(Player playerConcerned){
 
@@ -161,24 +178,25 @@ public class Round {
         else if(typePower.equals("Juge")){
             this.activePowerJuge(playerConcerned);
         }
-        else if(typePower.equals("Paysan")){
+        else if(typePower.equals("Paysan")) {
             this.activePowerPaysan(playerConcerned);
         }
-        else if(typePower.equals("Reine")){
+        else if(typePower.equals("Reine")) {
             this.activePowerReine(playerConcerned);
         }
         else if(typePower.equals("Roi")){
             this.activePowerRoi(playerConcerned);
         }
-        else if(typePower.equals("Sorciere")){
+        else if(typePower.equals("Sorciere")) {
             this.activePowerSorciere(playerConcerned);
-        } else if(typePower.equals("Tricheur")){
+        }
+        else if(typePower.equals("Tricheur")) {
             this.activePowerTricheur(playerConcerned);
         }
-        else if(typePower.equals("Veuve")){
+        else if(typePower.equals("Veuve")) {
             this.activePowerVeuve(playerConcerned);
         }
-        else if(typePower.equals("Voleur")){
+        else if(typePower.equals("Voleur")) {
             this.activePowerVoleur(playerConcerned);
         }
     }
@@ -192,7 +210,7 @@ public class Round {
         TextView textViewInstruction = (TextView)boardMascarade.findViewById(R.id.textView_instructions);
         textViewInstruction.setText("Choisissez la carte du joueur que vous souhaitez voir.");
 
-        this.activateListenersCards(playerConcerned);
+        this.activateListenersCards(playerConcerned, "power");
 
     }
 
@@ -220,7 +238,7 @@ public class Round {
         TextView textViewInstruction = (TextView)boardMascarade.findViewById(R.id.textView_instructions);
         textViewInstruction.setText("Vous recevez une pièce d'or de la banque.\nChoisissez deux cartes que vous souhaiter échanger ou non.");
 
-        this.activateListenersCards(playerConcerned);
+        this.activateListenersCards(playerConcerned, "power");
     }
 
     public void activePowerInquisiteur(Player playerConcerned){
@@ -240,7 +258,7 @@ public class Round {
 
         jugeCardPlayerConcerned.activePower(playerConcerned, tribunal);
 
-        textViewInstruction.setText("Vous récupérez " + tribunalMoney + " du tribunal.");
+        textViewInstruction.setText("Vous récupérez " + tribunalMoney + " or du tribunal.");
     }
 
     /**
@@ -260,7 +278,7 @@ public class Round {
         builder.setMessage("Voulez vous tenter de trouver l'autre paysan ?")
                 .setPositiveButton("Oui", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        activateListenersCards(playerConcerned);
+                        activateListenersCards(playerConcerned, "power");
                     }
                 })
                 .setNegativeButton("Non", new DialogInterface.OnClickListener() {
@@ -289,7 +307,7 @@ public class Round {
     }
 
     /**
-     * Get 3 gold
+     * Get 3 gold from bank.
      *
      * @param playerConcerned
      */
@@ -310,11 +328,11 @@ public class Round {
         TextView textViewInstruction = (TextView)boardMascarade.findViewById(R.id.textView_instructions);
         textViewInstruction.setText("Choisissez la carte du joueur avec qui vous souhaitez échanger votre or.");
 
-        this.activateListenersCards(playerConcerned);
+        this.activateListenersCards(playerConcerned, "power");
     }
 
     /**
-     * If player has 10 gold, he win.
+     * If player has 10 gold, he wins.
      *
      * @param concernedPlayer
      */
@@ -398,18 +416,26 @@ public class Round {
 
     }
 
-    public void activateListenersCards(Player mainPlayer){
+    public void activateListenersCards(Player mainPlayer, String action){
 
         ArrayList<Player> playerArrayList = bank.getListPlayers();
 
         for(int i = 0; i < playerArrayList.size() ; i++){
             Player player = playerArrayList.get(i);
             if(!player.isPlayer()){
-                Card playerCardOpponent = playerArrayList.get(i).getCard();
+                Player opponentPlayer = playerArrayList.get(i);
+                Card playerCardOpponent = opponentPlayer.getCard();
                 String idCard = Integer.toString(playerArrayList.get(i).getId());
                 String idStringImageView = "imageViewCard_" + playerCardOpponent.getTypeCard() + "_" + idCard;
                 ImageView cardView = (ImageView)boardMascarade.findViewById(R.id.linearLayout_horiz_5players).findViewWithTag(idStringImageView);
-                cardView.setOnTouchListener(new OnTouchListenerCard(playerCardOpponent, cardView, mainPlayer));
+                Log.d(ROUND, "mainPlayer : " + mainPlayer.getId());
+                if(action.equals("power")){
+                    cardView.setOnTouchListener(new OnTouchListenerCardPower(playerCardOpponent, mainPlayer));
+                }
+                else if(action.equals("change")){
+                    cardView.setOnTouchListener(new OnTouchListenerCardChange(opponentPlayer, mainPlayer));
+                }
+
             }
 
         }
@@ -423,22 +449,60 @@ public class Round {
                 String idStringImageView = "imageViewCard_" + cardCenter.getTypeCard() + "_" + idCard;
 
                 ImageView cardView = (ImageView)boardMascarade.findViewById(R.id.linearLayout_horiz_5players).findViewWithTag(idStringImageView);
-                cardView.setOnTouchListener(new OnTouchListenerCard(cardCenter, cardView, mainPlayer));
+                cardView.setOnTouchListener(new OnTouchListenerCardPower(cardCenter, mainPlayer));
             }
         }
 
 
     }
 
-    class OnTouchListenerCard implements View.OnTouchListener {
+    class OnTouchListenerCardChange implements View.OnTouchListener{
 
-        private final Card cardOpponent;
-        private final ImageView imageCard;
-        private final Player playerConcerned;
+        private Player opponentPlayer;
+        private Player playerConcerned;
 
-        OnTouchListenerCard(Card cardOpponent, ImageView imageCard, Player playerConcerned){
+        OnTouchListenerCardChange(Player opponentPlayer, Player playerConcerned){
+            this.opponentPlayer = opponentPlayer;
+            this.playerConcerned = playerConcerned;
+        }
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            int action = event.getActionMasked();
+
+            if (action == MotionEvent.ACTION_DOWN) {
+                TextView textViewInstructions = (TextView) boardMascarade.findViewById(R.id.textView_instructions);
+
+                Log.d(ROUND, "cardOpponent : " + opponentPlayer.getTypeCard());
+
+                AlertDialog.Builder builderChangeCards = new AlertDialog.Builder(boardMascarade);
+                builderChangeCards.setTitle("Souhaitez vous échanger votre carte avec un autre joueur ?")
+                        .setPositiveButton("Oui", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                playerConcerned.swapCards(opponentPlayer, true);
+                            }
+                        })
+                        .setNegativeButton("Non", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+
+                            }
+                        });
+                builderChangeCards.create();
+                builderChangeCards.show();
+
+            }
+            return true;
+        }
+    }
+
+
+    class OnTouchListenerCardPower implements View.OnTouchListener {
+
+        private Card cardOpponent;
+        private Player playerConcerned;
+
+        OnTouchListenerCardPower(Card cardOpponent, Player playerConcerned){
             this.cardOpponent = cardOpponent;
-            this.imageCard = imageCard;
             this.playerConcerned = playerConcerned;
         }
 
@@ -455,32 +519,58 @@ public class Round {
 
                 Log.d(ROUND, "playerConcernedCard : " + typeCardPlayerConcerned + "  card : " + cardOpponent.getTypeCard());
 
-                if (typeCardPlayerConcerned.equals("Sorciere")) {
-                    Player opponentPlayer = bank.getPlayerWithCard(cardOpponent.getTypeCard());
-                    textViewInstructions.setText("Vous avez sélectionné le " + opponentPlayer.getName() + " pour échanger votre or.");
-                    Sorciere playerConcernedCard = (Sorciere) playerConcerned.getCard();
-                    playerConcernedCard.activePower(playerConcerned, opponentPlayer);
+                if (typeCardPlayerConcerned.equals("Espionne")) {
+                    final Player opponentPlayer = bank.getPlayerWithCard(cardOpponent.getTypeCard());
+                    setOpponentPlayer(opponentPlayer);
 
-                } else if (typeCardPlayerConcerned.equals("Espionne")) {
-                    /*Player opponentPlayer = bank.getPlayerWithCard(cardOpponent.getTypeCard());
-                    textViewInstructions.setText("Vous avez sélectionné le " + opponentPlayer.getName() + " pour échanger votre or.");
-                    Espionne playerConcernedCard = (Espionne)playerConcerned.getCard();
-                    playerConcernedCard.setPlayer(playerConcerned);
-                    playerConcernedCard.setBoardMascarade(boardMascarade);
-                    playerConcernedCard.setOpponent(opponentPlayer);*/
-                    //playerConcernedCard.setChangeCards();
+                    textViewInstructions.setText("Le " + opponentPlayer.getName() + " est un(e) " + cardOpponent.getTypeCard() + ".");
+                    final Espionne playerConcernedCard = (Espionne)playerConcerned.getCard();
+                    desactivateListenersCards(playerConcerned);
+
+                    final String idConcernedPlayer = Integer.toString(playerConcerned.getId());
+
+                    final String idOpponentPlayer = Integer.toString(opponentPlayer.getId());
+                    cardOpponent.showCard(idOpponentPlayer, boardMascarade);
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(boardMascarade);
+                    builder.setTitle("Vous êtes une espionne");
+                    builder.setMessage("Voulez vous échanger votre carte avec votre adversaire ( "+ cardOpponent.getTypeCard() + ") ?")
+                            .setPositiveButton("Oui", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    playerConcernedCard.activePower(playerConcerned, opponentPlayer, true);
+
+                                }
+                            })
+                            .setNegativeButton("Non", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    playerConcernedCard.activePower(playerConcerned, opponentPlayer, false);
+
+                                }
+                            });
+                    builder.create();
+                    builder.show();
+
+
+
 
                 } else if (typeCardPlayerConcerned.equals("Eveque")) {
-                    textViewInstructions.setText("carte eveque");
+
+                    textViewInstructions.setText("carte eveque : pas de carte à sélectionner");
+                    desactivateListenersCards(playerConcerned);
+
                 } else if (typeCardPlayerConcerned.equals("Fou")) {
-                    textViewInstructions.setText("carte fou");
+                    // need to select 2 cards
+                    textViewInstructions.setText("carte fou : sélectionnez 2 joueurs");
+
                 } else if (typeCardPlayerConcerned.equals("Inquisiteur")) {
-                    textViewInstructions.setText("carte inquisteur");
+                    Player opponentPlayer = bank.getPlayerWithCard(cardOpponent.getTypeCard());
+                    setOpponentPlayer(opponentPlayer);
+                    textViewInstructions.setText("Vous avez sélectionné le " + opponentPlayer.getName() + ". Il doit annoncer son personnage");
+
                 } else if (typeCardPlayerConcerned.equals("Juge")) {
 
-                    textViewInstructions.setText("carte juge");
-                    Juge playerConcernedCard = (Juge)playerConcerned.getCard();
-                    playerConcernedCard.setConcernedPlayer(playerConcerned);
+                    textViewInstructions.setText("carte juge :  pas de carte à sélectionner");
+                    desactivateListenersCards(playerConcerned);
 
                 } else if (typeCardPlayerConcerned.equals("Paysan")) {
                     textViewInstructions.setText("carte paysan");
@@ -491,29 +581,48 @@ public class Round {
                         ImageView paysanPartnerImageView = (ImageView)boardMascarade.findViewById(R.id.linearLayout_horiz_5players).findViewWithTag(idStringImageView);
                         paysanPartnerImageView.setImageResource(R.drawable.paysan_card);
 
+                        desactivateListenersCards(playerConcerned);
+
                         Paysan playerConcernedCard = (Paysan) playerConcerned.getCard();
                         playerConcernedCard.activePower(playerConcerned, partnerPlayer, true);
+
+
                     }
 
 
                 } else if (typeCardPlayerConcerned.equals("Reine")) {
 
-                    textViewInstructions.setText("carte reine");
-                    Reine playerConcernedCard = (Reine)playerConcerned.getCard();
-                    playerConcernedCard.setConcernedPlayer(playerConcerned);
+                    textViewInstructions.setText("carte reine : pas de carte à sélectionner");
+                    desactivateListenersCards(playerConcerned);
 
                 } else if (typeCardPlayerConcerned.equals("Roi")) {
 
-                    textViewInstructions.setText("carte roi");
-                    Roi playerConcernedCard = (Roi)playerConcerned.getCard();
-                    playerConcernedCard.setConcernedPlayer(playerConcerned);
+                    textViewInstructions.setText("carte roi: pas de carte à sélectionner");
+                    desactivateListenersCards(playerConcerned);
+
+                } else if (typeCardPlayerConcerned.equals("Sorciere")) {
+                    Player opponentPlayer = bank.getPlayerWithCard(cardOpponent.getTypeCard());
+                    setOpponentPlayer(opponentPlayer);
+
+                    textViewInstructions.setText("Vous avez sélectionné le " + opponentPlayer.getName() + " pour échanger votre or.");
+                    Sorciere playerConcernedCard = (Sorciere) playerConcerned.getCard();
+                    playerConcernedCard.activePower(playerConcerned, opponentPlayer);
+
+                    desactivateListenersCards(playerConcerned);
 
                 } else if (typeCardPlayerConcerned.equals("Tricheur")) {
 
-                    textViewInstructions.setText("carte tricheur");
+                    textViewInstructions.setText("carte tricheur: pas de carte à sélectionner");
+                    desactivateListenersCards(playerConcerned);
 
                 } else if (typeCardPlayerConcerned.equals("Veuve")) {
-                    textViewInstructions.setText("carte veuve");
+                    textViewInstructions.setText("carte veuve: pas de carte à sélectionner");
+                    desactivateListenersCards(playerConcerned);
+                }
+                else if(typeCardPlayerConcerned.equals("Voleur")){
+                    textViewInstructions.setText("carte voleur: pas de carte à sélectionner");
+                    desactivateListenersCards(playerConcerned);
+
                 }
 
             }
@@ -521,5 +630,51 @@ public class Round {
         }
     }
 
+    public int getNbRound() {
+        return nbRound;
+    }
 
+    public void setNbRound(int nbRound) {
+        this.nbRound = nbRound;
+    }
+
+    public PlateauMascarade getBoardMascarade() {
+        return boardMascarade;
+    }
+
+    public void setBoardMascarade(PlateauMascarade boardMascarade) {
+        this.boardMascarade = boardMascarade;
+    }
+
+    public Bank getBank() {
+        return bank;
+    }
+
+    public void setBank(Bank bank) {
+        this.bank = bank;
+    }
+
+    public Tribunal getTribunal() {
+        return tribunal;
+    }
+
+    public void setTribunal(Tribunal tribunal) {
+        this.tribunal = tribunal;
+    }
+
+    public String getActionChoosen() {
+        return actionChoosen;
+    }
+
+    public void setActionChoosen(String actionChoosen) {
+        this.actionChoosen = actionChoosen;
+    }
+
+    public Player getOpponentPlayer() {
+        return opponentPlayer;
+    }
+
+    public void setOpponentPlayer(Player opponentPlayer) {
+        this.opponentPlayer = opponentPlayer;
+    }
 }

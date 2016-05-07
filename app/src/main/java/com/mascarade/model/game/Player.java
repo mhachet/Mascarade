@@ -55,7 +55,7 @@ public class Player {
 
             String idMainPlayer = Integer.toString(this.getId());
             Log.d(PLAYER, "good choice " + announcedCard + "  -  " + cardPlayer);
-            showCard(this.getCard(), idMainPlayer, boardMascarade);
+            cardActived.showCard(idMainPlayer, boardMascarade);
 
             cardActived.setBoardMascarade(boardMascarade);
             cardActived.setPlayer(this);
@@ -87,12 +87,6 @@ public class Player {
         return announceCorrect;
     }
 
-    public void showCard(Card cardPlayer, String idCard, Activity boardMascarade){
-        String idStringImageView = "imageViewCard_" + cardPlayer.getTypeCard() + "_" + idCard;
-        int idCardImage = cardPlayer.getIdCardImageFromCard();
-        ImageView cardView = (ImageView)boardMascarade.findViewById(R.id.linearLayout_horiz_5players).findViewWithTag(idStringImageView);
-        cardView.setImageResource(idCardImage);
-    }
     /**
      * Second player power is to see its own card
      */
@@ -112,9 +106,21 @@ public class Player {
 
         if(swap) {
             Card opponentCard = opponent.getCard();
+            Log.d(PLAYER, "before opponent : " + opponent.getName() + " => " + opponentCard.getTypeCard());
             Card tempCard = this.getCard();
+            Log.d(PLAYER, "before mainplayer : " + this.getName() + " => " + this.getTypeCard());
+
             this.setCard(opponentCard);
+            Card newCardPlayer = this.getCard();
+            Log.d(PLAYER, "after mainplayer : " + this.getName() + " => " + this.getTypeCard());
+            //newCardPlayer.hideCard(Integer.toString(this.getId()), boardMascarade);
+
             opponent.setCard(tempCard);
+            Card newOpponentCard = opponent.getCard();
+            Log.d(PLAYER, "after opponent : " + opponent.getName() + " => " + opponentCard.getTypeCard());
+            //newOpponentCard.hideCard(Integer.toString(opponent.getId()), boardMascarade);
+
+
         }
         else{
             // do something : draw dark side even if no swap
@@ -146,8 +152,19 @@ public class Player {
     }
 
     public void setCard(Card card) {
+
+        String idStringImageView = "imageViewCard_" + cardType + "_" + this.getId();
+        int idCardImage = card.getIdCardImageFromCard();
+        //Log.d(PLAYER, "idStringImageView setCard : " + idStringImageView);
+        ImageView cardView = (ImageView)boardMascarade.findViewById(R.id.linearLayout_horiz_5players).findViewWithTag(idStringImageView);
+        if (cardView != null) {
+            //Log.d(PLAYER, "cardView not null  " + idCardImage);
+            cardView.setImageResource(idCardImage);
+        }
         this.card = card;
         this.cardType = this.getTypeCard();
+
+
     }
 
     public int getId() {

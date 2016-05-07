@@ -134,7 +134,8 @@ public class PlateauMascarade extends Activity {
         for(int i = 0; i < playerArrayList.size() ; i++){
             Card playerCard = playerArrayList.get(i).getCard();
             String idCard = Integer.toString(playerArrayList.get(i).getId());
-            zeroRound.hideCard(playerCard, idCard, this);
+            //zeroRound.hideCard(playerCard, idCard, this);
+            playerCard.hideCard(idCard, this);
         }
 
         int nbPlayer = bank.getNbPlayers();
@@ -145,14 +146,14 @@ public class PlateauMascarade extends Activity {
                 int numberCardCenter = j + 1;
                 String idCard = "center_" + numberCardCenter;
                 //Log.d(PLATEAU, "sizeCardsCenter : " + cardCenter.getTypeCard());
-                zeroRound.hideCard(cardCenter, idCard, this);
+                //zeroRound.hideCard(cardCenter, idCard, this);
+                cardCenter.hideCard(idCard, this);
             }
         }
 
         ArrayList<Round> listRoundsGame = newGame.getListRounds();
         listRoundsGame.add(zeroRound);
-
-        newGame.addListenersActionPlayer(this);
+        newGame.startGame(this, tribunal);
 
     }
 
