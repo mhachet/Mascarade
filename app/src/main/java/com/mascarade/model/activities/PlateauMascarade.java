@@ -153,6 +153,11 @@ public class PlateauMascarade extends Activity {
 
         ArrayList<Round> listRoundsGame = newGame.getListRounds();
         listRoundsGame.add(zeroRound);
+        addInstructionOnBoard("Le jeu commence");
+        zeroRound.setButtonChangeCards(false);
+        zeroRound.setButtonFinishRound(false);
+        zeroRound.setButtonAnnounceCard(false);
+        zeroRound.setButtonSeeCard(false);
         newGame.startGame(this, tribunal);
 
     }
@@ -247,7 +252,7 @@ public class PlateauMascarade extends Activity {
             linearLayout.setWeightSum(1);
 
             ImageView cardImageView = new ImageView(this);
-            cardImageView.setTag("imageViewCard_" + player.getTypeCard() + "_" + player.getId());
+            cardImageView.setTag("imageViewCard_" + player.getId());
             //Log.d(PLATEAU, "cardViewTag Board : " + cardImageView.getTag() + "_center_1");
             cardImageView.setImageResource(player.getCard().getIdCardImageFromCard());
             cardImageView.setLayoutParams(linearLayoutWrapContent);
@@ -319,7 +324,7 @@ public class PlateauMascarade extends Activity {
             linearLayout.setWeightSum(1);
 
             ImageView cardImageView = new ImageView(this);
-            cardImageView.setTag("imageViewCard_" + player.getTypeCard() + "_" + player.getId());
+            cardImageView.setTag("imageViewCard_" + player.getId());
             //Log.d(PLATEAU, "cardViewTag Board : " + cardImageView.getTag());
             cardImageView.setImageResource(player.getCard().getIdCardImageFromCard());
             cardImageView.setLayoutParams(linearLayoutWrapContent);
@@ -368,7 +373,7 @@ public class PlateauMascarade extends Activity {
         Card firstCardCenter = listCardCenter.get(0);
 
         ImageView cardImageView = new ImageView(this);
-        cardImageView.setTag("imageViewCard_" + firstCardCenter.getTypeCard() + "_center_1");
+        cardImageView.setTag("imageViewCard_center_1");
         Log.d(PLATEAU, "cardViewTag Board : " + cardImageView.getTag());
         cardImageView.setImageResource(firstCardCenter.getIdCardImageFromCard());
         cardImageView.setLayoutParams(linearLayoutWrapContent);
@@ -415,7 +420,7 @@ public class PlateauMascarade extends Activity {
         textView_secondCard.setLayoutParams(linearVertical);
 
         ImageView cardImageView = new ImageView(this);
-        cardImageView.setTag("imageViewCard_" + secondCardCenter.getTypeCard() + "_center_2");
+        cardImageView.setTag("imageViewCard_center_2");
         Log.d(PLATEAU, "cardViewTag Board : " + cardImageView.getTag());
         cardImageView.setImageResource(secondCardCenter.getIdCardImageFromCard());
         cardImageView.setLayoutParams(linearLayoutWrapContent);
@@ -470,8 +475,8 @@ public class PlateauMascarade extends Activity {
         Card firstCardCenter = listCardCenter.get(0);
 
         ImageView cardImageView = new ImageView(this);
-        cardImageView.setTag("imageViewCard_" + firstCardCenter.getTypeCard() + "_center_1");
-        Log.d(PLATEAU, "cardViewTag Board : " + cardImageView.getTag() + "_center_1");
+        cardImageView.setTag("imageViewCard_center_1");
+        Log.d(PLATEAU, "cardViewTag Board : " + cardImageView.getTag());
         cardImageView.setImageResource(firstCardCenter.getIdCardImageFromCard());
         cardImageView.setLayoutParams(linearLayoutCard);
         cardImageView.getLayoutParams().height = 250;

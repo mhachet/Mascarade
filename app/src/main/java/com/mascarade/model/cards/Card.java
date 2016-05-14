@@ -3,17 +3,11 @@ package com.mascarade.model.cards;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.Image;
 import android.util.Log;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 
 import com.mascarade.R;
-import com.mascarade.model.game.Bank;
 import com.mascarade.model.game.Player;
-import com.mascarade.model.game.Tribunal;
-
-import java.util.ArrayList;
 
 /**
  * Created by melanie on 12/03/16.
@@ -40,7 +34,7 @@ public abstract class Card {
      * @param boardMascarade
      */
     public void hideCard(String idPlayer, Activity boardMascarade){
-        String idStringImageView = "imageViewCard_" + this.getTypeCard() + "_" + idPlayer;
+        String idStringImageView = "imageViewCard_" + idPlayer;
         Log.d(CARD, "idStringImageView : " + idStringImageView);
         ImageView cardView = (ImageView)boardMascarade.findViewById(R.id.linearLayout_horiz_5players).findViewWithTag(idStringImageView);
         cardView.setImageResource(R.drawable.card_darkside);
@@ -55,7 +49,7 @@ public abstract class Card {
      * @param boardMascarade
      */
     public void showCard(String idCard, Activity boardMascarade){
-        String idStringImageView = "imageViewCard_" + this.getTypeCard() + "_" + idCard;
+        String idStringImageView = "imageViewCard_" + idCard;
         Log.d(CARD, "idStringImageView Card : " + idStringImageView);
         int idCardImage = this.getIdCardImageFromCard();
         ImageView cardView = (ImageView)boardMascarade.findViewById(R.id.linearLayout_horiz_5players).findViewWithTag(idStringImageView);

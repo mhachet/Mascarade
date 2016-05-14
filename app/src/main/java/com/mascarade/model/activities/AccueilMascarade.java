@@ -34,10 +34,25 @@ public class AccueilMascarade extends Activity {
 
         Button rulesButton = (Button)findViewById(R.id.button_rules);
         //rulesButton.setTypeface(font);
+        rulesButton.setOnClickListener(new ButtonRulesOnClickListener(rulesButton));
 
         Button leaveButton = (Button)findViewById(R.id.button_leave);
         leaveButton.setOnClickListener(new ButtonLeaveOnClickListener(leaveButton));
 
+    }
+
+    class ButtonRulesOnClickListener implements View.OnClickListener{
+        private final Button button;
+        ButtonRulesOnClickListener(Button button){
+            this.button = button;
+        }
+
+        @Override
+        public void onClick(View v) {
+            Log.d(MASCARADE, button.getId() + " is clicked");
+            Intent httpActivity = new Intent(AccueilMascarade.this, HttpMascaradeActivity.class);
+            startActivity(httpActivity);
+        }
     }
 
     class ButtonOnClickListener implements View.OnClickListener{

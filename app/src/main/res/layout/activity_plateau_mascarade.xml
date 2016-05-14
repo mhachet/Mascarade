@@ -92,30 +92,30 @@
                     android:id="@+id/button_changeCard"
                     android:layout_centerHorizontal="true"
                     android:textSize="10dp"
-                    android:layout_weight="0.3"
+                    android:layout_weight="0.25"
                     android:gravity="fill_vertical"
                     android:textAlignment="center"
-                    android:layout_marginBottom="5dp" />
+                    android:layout_marginBottom="2dp" />
 
                 <Button
                     android:background="@drawable/button_rounded"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:text="Annoncer sa carte"
-                    android:layout_weight="0.3"
+                    android:layout_weight="0.25"
                     android:id="@+id/button_announceCard"
                     android:layout_centerHorizontal="true"
                     android:textSize="10dp"
                     android:gravity="fill_vertical"
                     android:textAlignment="center"
-                    android:layout_marginBottom="5dp"
+                    android:layout_marginBottom="2dp"
                     android:clickable="true"
                     android:enabled="true" />
 
                 <Button
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.3"
+                    android:layout_weight="0.25"
                     android:background="@drawable/button_rounded"
                     android:text="Regarder sa carte"
                     android:id="@+id/button_seeCard"
@@ -125,11 +125,29 @@
                     android:textAlignment="center"
                     android:layout_margin="0dp"
                     android:layout_marginTop="0dp"
-                    android:layout_gravity="bottom"
-                    android:clickable="false" />
+                    android:clickable="false"
+                    android:layout_marginBottom="2dp" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.25"
+                    android:background="@drawable/button_rounded"
+                    android:text="Finir son tour"
+                    android:id="@+id/button_finally_round"
+                    android:layout_centerHorizontal="true"
+                    android:textSize="10dp"
+                    android:textAlignment="center"
+                    android:layout_margin="0dp"
+                    android:layout_marginTop="0dp"
+                    android:clickable="false"
+                    android:layout_marginBottom="2dp"
+                    android:gravity="fill_vertical" />
+
                 <!--android:background="#a9342a"-->
 
             </LinearLayout>
+
         </LinearLayout>
 
     </LinearLayout>

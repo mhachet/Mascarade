@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mascarade.R;
+import com.mascarade.model.activities.PlateauMascarade;
 import com.mascarade.model.cards.Card;
 
 /**
@@ -98,7 +99,7 @@ public class Player {
     }
 
     /**
-     * The thirs player power is swap (or not) its card with another player
+     * The third player power is swap (or not) its card with another player
      *
      * @param opponent
      */
@@ -113,12 +114,12 @@ public class Player {
             this.setCard(opponentCard);
             Card newCardPlayer = this.getCard();
             Log.d(PLAYER, "after mainplayer : " + this.getName() + " => " + this.getTypeCard());
-            //newCardPlayer.hideCard(Integer.toString(this.getId()), boardMascarade);
+            newCardPlayer.hideCard(Integer.toString(this.getId()), boardMascarade);
 
             opponent.setCard(tempCard);
             Card newOpponentCard = opponent.getCard();
             Log.d(PLAYER, "after opponent : " + opponent.getName() + " => " + opponentCard.getTypeCard());
-            //newOpponentCard.hideCard(Integer.toString(opponent.getId()), boardMascarade);
+            newOpponentCard.hideCard(Integer.toString(opponent.getId()), boardMascarade);
 
 
         }
@@ -153,7 +154,7 @@ public class Player {
 
     public void setCard(Card card) {
 
-        String idStringImageView = "imageViewCard_" + cardType + "_" + this.getId();
+        String idStringImageView = "imageViewCard_" + this.getId();
         int idCardImage = card.getIdCardImageFromCard();
         //Log.d(PLAYER, "idStringImageView setCard : " + idStringImageView);
         ImageView cardView = (ImageView)boardMascarade.findViewById(R.id.linearLayout_horiz_5players).findViewWithTag(idStringImageView);

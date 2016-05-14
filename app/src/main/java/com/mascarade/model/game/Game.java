@@ -1,11 +1,8 @@
 package com.mascarade.model.game;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.widget.TextView;
 
 import com.mascarade.model.activities.PlateauMascarade;
-import com.mascarade.model.cards.Card;
 
 import java.util.ArrayList;
 
@@ -31,6 +28,8 @@ public class Game {
         if(winner == null){
             countRound ++;
             Round round = new Round(countRound, boardMascarade, bank, tribunal);
+            round.setNbRound(countRound);
+
             ArrayList<Round> listRoundsGame = this.getListRounds();
             listRoundsGame.add(round);
             this.addListenersActionPlayer(boardMascarade);
@@ -46,46 +45,17 @@ public class Game {
             currentRound.activeSeeCardButton();
             String actionChoosen = currentRound.getActionChoosen();
             Player opponentPlayer = currentRound.getOpponentPlayer();
-            this.finishRound(boardMascarade, actionChoosen, opponentPlayer);
 
         }
         else{
             currentRound.activeChangeCardButton();
+
             String actionChoosen = currentRound.getActionChoosen();
             Player opponentPlayer = currentRound.getOpponentPlayer();
-            this.finishRound(boardMascarade, actionChoosen, opponentPlayer);
+            //this.finishRound(boardMascarade, actionChoosen, opponentPlayer);
         }
 
 
-    }
-
-
-    public void finishRound(final Activity boardMascarade, final String action, final Player opponentPlayer){
-
-        final Player playerConcerned = bank.getMainPlayer();
-        final Card cardPlayerConcerned = playerConcerned.getCard();
-        final String idCard = Integer.toString(playerConcerned.getId());
-        final AlertDialog.Builder builderNext = new AlertDialog.Builder(boardMascarade);
-        builderNext.setTitle("Tour terminé")
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        if (action.equals("see")) {
-                            cardPlayerConcerned.hideCard(idCard, boardMascarade);
-                            playerConcerned.setLastCardKnown(cardPlayerConcerned.getTypeCard());
-                        } else if (action.equals("power")) {
-                            cardPlayerConcerned.hideCard(idCard, boardMascarade);
-
-                            if(opponentPlayer != null){
-                                Card cardOpponent = opponentPlayer.getCard();
-                                String idOpponentPlayer = Integer.toString(opponentPlayer.getId());
-                                cardOpponent.hideCard(idOpponentPlayer, boardMascarade);
-                            }
-
-                        }
-                    }
-                });
-        builderNext.create();
-        builderNext.show();
     }
 
     public ArrayList<Round> getListRounds() {

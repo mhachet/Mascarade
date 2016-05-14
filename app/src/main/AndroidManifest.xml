@@ -1,5 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.mascarade">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
         android:allowBackup="true"
@@ -7,9 +12,12 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.mascarade.model.activities.AccueilMascarade"></activity>
-        <activity android:name="com.mascarade.model.activities.OptionsMascarade"></activity>
-        <activity android:name=".model.activities.PlateauMascarade"></activity>
+        <activity android:name=".model.activities.AccueilMascarade" />
+        <activity android:name=".model.activities.OptionsMascarade" />
+        <activity android:name=".model.activities.PlateauMascarade" />
+        <activity android:name=".model.activities.HttpMascaradeActivity"></activity>
+
     </application>
+
 
 </manifest>

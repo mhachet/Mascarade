@@ -1,5 +1,6 @@
 package com.mascarade.model.game;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.util.Log;
@@ -47,19 +48,40 @@ public class Round {
     }
 
     public void activeChangeCardButton(){
+        this.setButtonChangeCards(true);
         Button buttonChangeCard = (Button)boardMascarade.findViewById(R.id.button_changeCard);
         buttonChangeCard.setOnTouchListener(new ButtonChangeCardOnClickListener());
     }
 
     public void activeSeeCardButton(){
+        this.setButtonSeeCard(true);
         Button seeCardButton = (Button)boardMascarade.findViewById(R.id.button_seeCard);
         seeCardButton.setOnTouchListener(new ButtonSeeCardOnClickListener(seeCardButton, bank.getMainPlayer()));
     }
 
     public void activeAnnounceCardButton(){
+        this.setButtonAnnounceCard(true);
         Button announceCardButton = (Button)boardMascarade.findViewById(R.id.button_announceCard);
         announceCardButton.setOnTouchListener(new ButtonAnnounceCardOnClickListener(announceCardButton, boardMascarade));
 
+    }
+
+    public void activeFinallyRoundButton(){
+        this.setButtonFinishRound(true);
+        Button finallyRoundButton = (Button)boardMascarade.findViewById(R.id.button_finally_round);
+        finallyRoundButton.setOnTouchListener(new ButtonFinallyRoundOnClickListener());
+    }
+
+    class ButtonFinallyRoundOnClickListener implements View.OnTouchListener{
+
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+
+            finishRound(boardMascarade, "change", null);
+            setButtonFinishRound(false);
+            return false;
+        }
     }
 
     class ButtonChangeCardOnClickListener implements View.OnTouchListener{
@@ -393,7 +415,7 @@ public class Round {
             if (!player.isPlayer()) {
                 Card playerCardOpponent = playerArrayList.get(i).getCard();
                 String idCard = Integer.toString(playerArrayList.get(i).getId());
-                String idStringImageView = "imageViewCard_" + playerCardOpponent.getTypeCard() + "_" + idCard;
+                String idStringImageView = "imageViewCard_" + idCard;
                 ImageView cardView = (ImageView)boardMascarade.findViewById(R.id.linearLayout_horiz_5players).findViewWithTag(idStringImageView);
                 cardView.setClickable(false);
                 cardView.setEnabled(false);
@@ -405,8 +427,8 @@ public class Round {
             ArrayList<Card> cardsCenter = bank.getBankCardsCenter();
             for (int j = 0; j < cardsCenter.size(); j++) {
                 Card cardCenter = cardsCenter.get(j);
-                String idCard = "_center_" + j + 1;
-                String idStringImageView = "imageViewCard_" + cardCenter.getTypeCard() + "_" + idCard;
+                String idCard = "center_" + j + 1;
+                String idStringImageView = "imageViewCard_" + idCard;
 
                 ImageView cardView = (ImageView)boardMascarade.findViewById(R.id.linearLayout_horiz_5players).findViewWithTag(idStringImageView);
                 cardView.setClickable(false);
@@ -426,7 +448,7 @@ public class Round {
                 Player opponentPlayer = playerArrayList.get(i);
                 Card playerCardOpponent = opponentPlayer.getCard();
                 String idCard = Integer.toString(playerArrayList.get(i).getId());
-                String idStringImageView = "imageViewCard_" + playerCardOpponent.getTypeCard() + "_" + idCard;
+                String idStringImageView = "imageViewCard_" + idCard;
                 ImageView cardView = (ImageView)boardMascarade.findViewById(R.id.linearLayout_horiz_5players).findViewWithTag(idStringImageView);
                 Log.d(ROUND, "mainPlayer : " + mainPlayer.getId());
                 if(action.equals("power")){
@@ -445,8 +467,8 @@ public class Round {
             ArrayList<Card> cardsCenter = bank.getBankCardsCenter();
             for (int j = 0; j < cardsCenter.size(); j++) {
                 Card cardCenter = cardsCenter.get(j);
-                String idCard = "_center_" + j + 1;
-                String idStringImageView = "imageViewCard_" + cardCenter.getTypeCard() + "_" + idCard;
+                String idCard = "center_" + j + 1;
+                String idStringImageView = "imageViewCard_" + idCard;
 
                 ImageView cardView = (ImageView)boardMascarade.findViewById(R.id.linearLayout_horiz_5players).findViewWithTag(idStringImageView);
                 cardView.setOnTouchListener(new OnTouchListenerCardPower(cardCenter, mainPlayer));
@@ -479,11 +501,23 @@ public class Round {
                 builderChangeCards.setTitle("Souhaitez vous échanger votre carte avec un autre joueur ?")
                         .setPositiveButton("Oui", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
+                                TextView textViewInstruction = (TextView)boardMascarade.findViewById(R.id.textView_instructions);
+                                textViewInstruction.setText("Vous avez échangé vos cartes.");
                                 playerConcerned.swapCards(opponentPlayer, true);
+                                desactivateListenersCards(playerConcerned);
+                                setButtonChangeCards(false);
+                                activeFinallyRoundButton();
+
+
                             }
                         })
                         .setNegativeButton("Non", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
+                                TextView textViewInstruction = (TextView)boardMascarade.findViewById(R.id.textView_instructions);
+                                textViewInstruction.setText("Vous n'avez pas échangé vos cartes/");
+                                desactivateListenersCards(playerConcerned);
+                                setButtonChangeCards(false);
+                                activeFinallyRoundButton();
 
                             }
                         });
@@ -577,7 +611,7 @@ public class Round {
 
                     if (cardOpponent.getTypeCard().equals("Paysan")) {
                         Player partnerPlayer = bank.getPlayerWithCard(cardOpponent.getTypeCard());
-                        String idStringImageView = "imageViewCard_" + partnerPlayer.getTypeCard() + "_" + partnerPlayer.getId();
+                        String idStringImageView = "imageViewCard_" + partnerPlayer.getId();
                         ImageView paysanPartnerImageView = (ImageView)boardMascarade.findViewById(R.id.linearLayout_horiz_5players).findViewWithTag(idStringImageView);
                         paysanPartnerImageView.setImageResource(R.drawable.paysan_card);
 
@@ -630,12 +664,68 @@ public class Round {
         }
     }
 
+    public void finishRound(final Activity boardMascarade, final String action, final Player opponentPlayer){
+
+        final Player playerConcerned = bank.getMainPlayer();
+        final Card cardPlayerConcerned = playerConcerned.getCard();
+        final String idCard = Integer.toString(playerConcerned.getId());
+        final AlertDialog.Builder builderNext = new AlertDialog.Builder(boardMascarade);
+        builderNext.setTitle("Tour terminé")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        TextView textViewInstruction = (TextView)boardMascarade.findViewById(R.id.textView_instructions);
+                        textViewInstruction.setText("Votre tour est terminé");
+                        if (action.equals("see")) {
+                            cardPlayerConcerned.hideCard(idCard, boardMascarade);
+                            playerConcerned.setLastCardKnown(cardPlayerConcerned.getTypeCard());
+                        } else if (action.equals("power")) {
+                            cardPlayerConcerned.hideCard(idCard, boardMascarade);
+
+                            if(opponentPlayer != null){
+                                Card cardOpponent = opponentPlayer.getCard();
+                                String idOpponentPlayer = Integer.toString(opponentPlayer.getId());
+                                cardOpponent.hideCard(idOpponentPlayer, boardMascarade);
+                            }
+
+                        }
+                    }
+                });
+        builderNext.create();
+        builderNext.show();
+    }
+
+    public void setButtonChangeCards(boolean enableClickable){
+        Button buttonChangeCard = (Button)boardMascarade.findViewById(R.id.button_changeCard);
+        buttonChangeCard.setClickable(enableClickable);
+        buttonChangeCard.setEnabled(enableClickable);
+    }
+
+    public void setButtonSeeCard(boolean enableClickable){
+        Button buttonSeeCard = (Button)boardMascarade.findViewById(R.id.button_seeCard);
+        buttonSeeCard.setClickable(enableClickable);
+        buttonSeeCard.setEnabled(enableClickable);
+    }
+
+    public void setButtonAnnounceCard(boolean enableClickable){
+        Button buttonAnnounceCard = (Button)boardMascarade.findViewById(R.id.button_announceCard);
+        buttonAnnounceCard.setClickable(enableClickable);
+        buttonAnnounceCard.setEnabled(enableClickable);
+    }
+
+    public void setButtonFinishRound(boolean enableClickable){
+        Button buttonFinishRound = (Button)boardMascarade.findViewById(R.id.button_finally_round);
+        buttonFinishRound.setClickable(enableClickable);
+        buttonFinishRound.setEnabled(enableClickable);
+    }
+
     public int getNbRound() {
         return nbRound;
     }
 
     public void setNbRound(int nbRound) {
         this.nbRound = nbRound;
+        TextView textViewRound = (TextView)boardMascarade.findViewById(R.id.textView_round);
+        textViewRound.setText(Integer.toString(nbRound));
     }
 
     public PlateauMascarade getBoardMascarade() {
