@@ -128,6 +128,7 @@ public class Bank {
                 //card.setBank(this);
                 cardsDone.add(indexRandom);
                 player.setCard(card);
+                card.setPlayer(player);
                 if (nbPlayers < 6) {
                     cardsListRemove.add(card);
                 }
@@ -204,15 +205,15 @@ public class Bank {
     }
 
 
-    public Player getPlayerWithCard(String typeCardConcerned) {
+    public Player getPlayerWithCard(Card cardConcerned) {
         ArrayList<Player> listPlayers = this.getListPlayers();
         Player playerConcerned = null;
         boolean playerFound = false;
         for (int i = 0; i < listPlayers.size(); i++) {
             if (!playerFound) {
                 Player player = listPlayers.get(i);
-                String cardPlayer = player.getTypeCard();
-                if (cardPlayer.equals(typeCardConcerned)) {
+                Card cardPlayer = player.getCard();
+                if (cardPlayer.equals(cardConcerned)) {
                     playerConcerned = player;
                     playerFound = true;
                 }

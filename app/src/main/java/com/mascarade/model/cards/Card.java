@@ -25,8 +25,6 @@ public abstract class Card {
 
     }
 
-    //public abstract void activePower();
-
     /**
      * Hide card's player
      *

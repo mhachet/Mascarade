@@ -52,17 +52,17 @@ public class Player {
 
         if(announcedCard.equals(this.getTypeCard())){
 
-            Card cardActived = this.getCard();
+            Card cardActivated = this.getCard();
 
             String idMainPlayer = Integer.toString(this.getId());
             Log.d(PLAYER, "good choice " + announcedCard + "  -  " + cardPlayer);
-            cardActived.showCard(idMainPlayer, boardMascarade);
+            cardActivated.showCard(idMainPlayer, boardMascarade);
 
-            cardActived.setBoardMascarade(boardMascarade);
-            cardActived.setPlayer(this);
+            cardActivated.setBoardMascarade(boardMascarade);
+            cardActivated.setPlayer(this);
 
             textViewInstruction.setText("Quelle mémoire ! ");
-            //cardActived.activePower();
+            //cardActivated.activePower();
 
             announceCorrect = true;
 
@@ -114,10 +114,12 @@ public class Player {
             this.setCard(opponentCard);
             Card newCardPlayer = this.getCard();
             Log.d(PLAYER, "after mainplayer : " + this.getName() + " => " + this.getTypeCard());
+            newCardPlayer.setPlayer(this);
             newCardPlayer.hideCard(Integer.toString(this.getId()), boardMascarade);
 
             opponent.setCard(tempCard);
             Card newOpponentCard = opponent.getCard();
+            newOpponentCard.setPlayer(opponent);
             Log.d(PLAYER, "after opponent : " + opponent.getName() + " => " + opponentCard.getTypeCard());
             newOpponentCard.hideCard(Integer.toString(opponent.getId()), boardMascarade);
 
@@ -219,6 +221,8 @@ public class Player {
     }
 
     public void setLastCardKnown(String lastCardKnown) {
+        TextView textViewLastCardKnown = (TextView)boardMascarade.findViewById(R.id.textView_last_role_known);
+        textViewLastCardKnown.setText(lastCardKnown);
         this.lastCardKnown = lastCardKnown;
     }
 

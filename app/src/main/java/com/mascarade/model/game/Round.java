@@ -37,49 +37,54 @@ public class Round {
     private Tribunal tribunal;
     private String actionChoosen = "";
     private Player opponentPlayer;
+    private Game game;
 
     private final static String ROUND = "ROUND";
 
-    public Round(int nbRound, PlateauMascarade boardMascarade, Bank bank, Tribunal tribunal){
+    public Round(int nbRound, PlateauMascarade boardMascarade, Bank bank, Tribunal tribunal, Game game){
         this.nbRound = nbRound;
         this.boardMascarade = boardMascarade;
         this.bank = bank;
         this.tribunal = tribunal;
+        this.game = game;
     }
 
     public void activeChangeCardButton(){
-        this.setButtonChangeCards(true);
+        this.setEnableClickableButtonChangeCards(true);
         Button buttonChangeCard = (Button)boardMascarade.findViewById(R.id.button_changeCard);
         buttonChangeCard.setOnTouchListener(new ButtonChangeCardOnClickListener());
     }
 
     public void activeSeeCardButton(){
-        this.setButtonSeeCard(true);
+        this.setEnableClickableButtonSeeCard(true);
         Button seeCardButton = (Button)boardMascarade.findViewById(R.id.button_seeCard);
         seeCardButton.setOnTouchListener(new ButtonSeeCardOnClickListener(seeCardButton, bank.getMainPlayer()));
     }
 
     public void activeAnnounceCardButton(){
-        this.setButtonAnnounceCard(true);
+        this.setEnableClickableButtonAnnounceCard(true);
         Button announceCardButton = (Button)boardMascarade.findViewById(R.id.button_announceCard);
         announceCardButton.setOnTouchListener(new ButtonAnnounceCardOnClickListener(announceCardButton, boardMascarade));
 
     }
 
-    public void activeFinallyRoundButton(){
-        this.setButtonFinishRound(true);
+    public void activeFinallyRoundButton(Player opponentPlayer){
+        this.setEnableClickableButtonFinishRound(true);
         Button finallyRoundButton = (Button)boardMascarade.findViewById(R.id.button_finally_round);
-        finallyRoundButton.setOnTouchListener(new ButtonFinallyRoundOnClickListener());
+        finallyRoundButton.setOnTouchListener(new ButtonFinallyRoundOnClickListener(opponentPlayer));
     }
 
     class ButtonFinallyRoundOnClickListener implements View.OnTouchListener{
-
+        Player opponentPlayer;
+        ButtonFinallyRoundOnClickListener(Player opponentPlayer){
+            this.opponentPlayer = opponentPlayer;
+        }
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
 
-            finishRound(boardMascarade, "change", null);
-            setButtonFinishRound(false);
+            game.finishRound(getActionChoosen(), tribunal);
+            setEnableClickableButtonFinishRound(false);
             return false;
         }
     }
@@ -93,12 +98,20 @@ public class Round {
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
+
+            setEnableClickableButtonAnnounceCard(false);
+            setEnableClickableButtonChangeCards(false);
+            setEnableClickableButtonSeeCard(false);
+            setEnableClickableButtonFinishRound(false);
+
             TextView textViewInstruction = (TextView)boardMascarade.findViewById(R.id.textView_instructions);
             textViewInstruction.setText("Vous souhaitez échanger votre carte avec un autre joueur.");
             Player mainPlayer = bank.getMainPlayer();
             activateListenersCards(mainPlayer, "change");
 
             setActionChoosen("change");
+
+            activeFinallyRoundButton(null);
 
             return false;
         }
@@ -117,6 +130,11 @@ public class Round {
         @Override
         public boolean onTouch(View v, MotionEvent event){
 
+            setEnableClickableButtonAnnounceCard(false);
+            setEnableClickableButtonChangeCards(false);
+            setEnableClickableButtonSeeCard(false);
+            setEnableClickableButtonFinishRound(false);
+
             setActionChoosen("power");
 
             final TextView textViewInstruction = (TextView)boardMascarade.findViewById(R.id.textView_instructions);
@@ -126,7 +144,10 @@ public class Round {
             ArrayList<String> listCardsType = new ArrayList<>();
             for(int i = 0; i < listCards.size(); i++){
                 String cardType = listCards.get(i).getTypeCard();
-                listCardsType.add(cardType);
+                if(!listCardsType.contains(cardType)){
+                    listCardsType.add(cardType);
+                }
+
             }
             final CharSequence[] charSequenceCards = listCardsType.toArray(new CharSequence[listCardsType.size()]);
             final Player mainPlayer = bank.getMainPlayer();
@@ -143,6 +164,8 @@ public class Round {
                     if (announcementIsCorrect) {
                         activePowerPlayer(mainPlayer);
                     }
+                    activeFinallyRoundButton(null);
+
 
                 }
 
@@ -167,6 +190,12 @@ public class Round {
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
+
+            setEnableClickableButtonAnnounceCard(false);
+            setEnableClickableButtonChangeCards(false);
+            setEnableClickableButtonSeeCard(false);
+            setEnableClickableButtonFinishRound(false);
+
             setActionChoosen("see");
 
             TextView textViewInstructions = (TextView) boardMascarade.findViewById(R.id.textView_instructions);
@@ -174,6 +203,8 @@ public class Round {
             final Card cardPlayerConcerned = playerConcerned.getCard();
             final String idCard = Integer.toString(playerConcerned.getId());
             cardPlayerConcerned.showCard(idCard, boardMascarade);
+
+            activeFinallyRoundButton(null);
 
             return false;
         }
@@ -451,6 +482,8 @@ public class Round {
                 String idStringImageView = "imageViewCard_" + idCard;
                 ImageView cardView = (ImageView)boardMascarade.findViewById(R.id.linearLayout_horiz_5players).findViewWithTag(idStringImageView);
                 Log.d(ROUND, "mainPlayer : " + mainPlayer.getId());
+                cardView.setClickable(true);
+                cardView.setEnabled(true);
                 if(action.equals("power")){
                     cardView.setOnTouchListener(new OnTouchListenerCardPower(playerCardOpponent, mainPlayer));
                 }
@@ -505,10 +538,8 @@ public class Round {
                                 textViewInstruction.setText("Vous avez échangé vos cartes.");
                                 playerConcerned.swapCards(opponentPlayer, true);
                                 desactivateListenersCards(playerConcerned);
-                                setButtonChangeCards(false);
-                                activeFinallyRoundButton();
-
-
+                                setEnableClickableButtonChangeCards(false);
+                                activeFinallyRoundButton(opponentPlayer);
                             }
                         })
                         .setNegativeButton("Non", new DialogInterface.OnClickListener() {
@@ -516,8 +547,8 @@ public class Round {
                                 TextView textViewInstruction = (TextView)boardMascarade.findViewById(R.id.textView_instructions);
                                 textViewInstruction.setText("Vous n'avez pas échangé vos cartes/");
                                 desactivateListenersCards(playerConcerned);
-                                setButtonChangeCards(false);
-                                activeFinallyRoundButton();
+                                setEnableClickableButtonChangeCards(false);
+                                activeFinallyRoundButton(opponentPlayer);
 
                             }
                         });
@@ -551,10 +582,11 @@ public class Round {
 
                 TextView textViewInstructions = (TextView) boardMascarade.findViewById(R.id.textView_instructions);
 
-                Log.d(ROUND, "playerConcernedCard : " + typeCardPlayerConcerned + "  card : " + cardOpponent.getTypeCard());
+                Log.d(ROUND, "playerConcernedCard : " + playerConcerned.getName() + "  card : " + playerConcerned.getTypeCard() + " id : " + playerConcerned.getId());
+                Log.d(ROUND, "playerOpponentCard : " + cardOpponent.getPlayer().getName() + " card : " + cardOpponent.getTypeCard() + " id : " + cardOpponent.getPlayer().getId());
 
                 if (typeCardPlayerConcerned.equals("Espionne")) {
-                    final Player opponentPlayer = bank.getPlayerWithCard(cardOpponent.getTypeCard());
+                    final Player opponentPlayer = bank.getPlayerWithCard(cardOpponent);
                     setOpponentPlayer(opponentPlayer);
 
                     textViewInstructions.setText("Le " + opponentPlayer.getName() + " est un(e) " + cardOpponent.getTypeCard() + ".");
@@ -597,7 +629,7 @@ public class Round {
                     textViewInstructions.setText("carte fou : sélectionnez 2 joueurs");
 
                 } else if (typeCardPlayerConcerned.equals("Inquisiteur")) {
-                    Player opponentPlayer = bank.getPlayerWithCard(cardOpponent.getTypeCard());
+                    Player opponentPlayer = bank.getPlayerWithCard(cardOpponent);
                     setOpponentPlayer(opponentPlayer);
                     textViewInstructions.setText("Vous avez sélectionné le " + opponentPlayer.getName() + ". Il doit annoncer son personnage");
 
@@ -607,10 +639,11 @@ public class Round {
                     desactivateListenersCards(playerConcerned);
 
                 } else if (typeCardPlayerConcerned.equals("Paysan")) {
-                    textViewInstructions.setText("carte paysan");
 
                     if (cardOpponent.getTypeCard().equals("Paysan")) {
-                        Player partnerPlayer = bank.getPlayerWithCard(cardOpponent.getTypeCard());
+
+
+                        Player partnerPlayer = bank.getPlayerWithCard(cardOpponent);
                         String idStringImageView = "imageViewCard_" + partnerPlayer.getId();
                         ImageView paysanPartnerImageView = (ImageView)boardMascarade.findViewById(R.id.linearLayout_horiz_5players).findViewWithTag(idStringImageView);
                         paysanPartnerImageView.setImageResource(R.drawable.paysan_card);
@@ -619,8 +652,6 @@ public class Round {
 
                         Paysan playerConcernedCard = (Paysan) playerConcerned.getCard();
                         playerConcernedCard.activePower(playerConcerned, partnerPlayer, true);
-
-
                     }
 
 
@@ -635,7 +666,7 @@ public class Round {
                     desactivateListenersCards(playerConcerned);
 
                 } else if (typeCardPlayerConcerned.equals("Sorciere")) {
-                    Player opponentPlayer = bank.getPlayerWithCard(cardOpponent.getTypeCard());
+                    Player opponentPlayer = bank.getPlayerWithCard(cardOpponent);
                     setOpponentPlayer(opponentPlayer);
 
                     textViewInstructions.setText("Vous avez sélectionné le " + opponentPlayer.getName() + " pour échanger votre or.");
@@ -664,55 +695,27 @@ public class Round {
         }
     }
 
-    public void finishRound(final Activity boardMascarade, final String action, final Player opponentPlayer){
 
-        final Player playerConcerned = bank.getMainPlayer();
-        final Card cardPlayerConcerned = playerConcerned.getCard();
-        final String idCard = Integer.toString(playerConcerned.getId());
-        final AlertDialog.Builder builderNext = new AlertDialog.Builder(boardMascarade);
-        builderNext.setTitle("Tour terminé")
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        TextView textViewInstruction = (TextView)boardMascarade.findViewById(R.id.textView_instructions);
-                        textViewInstruction.setText("Votre tour est terminé");
-                        if (action.equals("see")) {
-                            cardPlayerConcerned.hideCard(idCard, boardMascarade);
-                            playerConcerned.setLastCardKnown(cardPlayerConcerned.getTypeCard());
-                        } else if (action.equals("power")) {
-                            cardPlayerConcerned.hideCard(idCard, boardMascarade);
 
-                            if(opponentPlayer != null){
-                                Card cardOpponent = opponentPlayer.getCard();
-                                String idOpponentPlayer = Integer.toString(opponentPlayer.getId());
-                                cardOpponent.hideCard(idOpponentPlayer, boardMascarade);
-                            }
-
-                        }
-                    }
-                });
-        builderNext.create();
-        builderNext.show();
-    }
-
-    public void setButtonChangeCards(boolean enableClickable){
+    public void setEnableClickableButtonChangeCards(boolean enableClickable){
         Button buttonChangeCard = (Button)boardMascarade.findViewById(R.id.button_changeCard);
         buttonChangeCard.setClickable(enableClickable);
         buttonChangeCard.setEnabled(enableClickable);
     }
 
-    public void setButtonSeeCard(boolean enableClickable){
+    public void setEnableClickableButtonSeeCard(boolean enableClickable){
         Button buttonSeeCard = (Button)boardMascarade.findViewById(R.id.button_seeCard);
         buttonSeeCard.setClickable(enableClickable);
         buttonSeeCard.setEnabled(enableClickable);
     }
 
-    public void setButtonAnnounceCard(boolean enableClickable){
+    public void setEnableClickableButtonAnnounceCard(boolean enableClickable){
         Button buttonAnnounceCard = (Button)boardMascarade.findViewById(R.id.button_announceCard);
         buttonAnnounceCard.setClickable(enableClickable);
         buttonAnnounceCard.setEnabled(enableClickable);
     }
 
-    public void setButtonFinishRound(boolean enableClickable){
+    public void setEnableClickableButtonFinishRound(boolean enableClickable){
         Button buttonFinishRound = (Button)boardMascarade.findViewById(R.id.button_finally_round);
         buttonFinishRound.setClickable(enableClickable);
         buttonFinishRound.setEnabled(enableClickable);

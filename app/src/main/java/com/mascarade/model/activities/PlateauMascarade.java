@@ -17,8 +17,6 @@ import com.mascarade.R;
 import com.mascarade.model.adapter.ListItem;
 import com.mascarade.model.adapter.RolesAdapter;
 import com.mascarade.model.cards.Card;
-import com.mascarade.model.cards.Espionne;
-import com.mascarade.model.cards.Fou;
 import com.mascarade.model.game.Bank;
 import com.mascarade.model.game.Game;
 import com.mascarade.model.game.Player;
@@ -68,7 +66,7 @@ public class PlateauMascarade extends Activity {
 
             gameIsLaunch = true;
 
-            newGame = new Game(bank);
+            newGame = new Game(bank, this);
 
 
 
@@ -77,17 +75,20 @@ public class PlateauMascarade extends Activity {
         startButton.setOnClickListener(new ButtonStartGameOnClickListener(startButton));
 
         Button announceCardButton = (Button)findViewById(R.id.button_announceCard);
-        //announceCardButton.setClickable(false);
-        //announceCardButton.setEnabled(false);
+        announceCardButton.setClickable(false);
+        announceCardButton.setEnabled(false);
 
         Button seeCardButton = (Button)findViewById(R.id.button_seeCard);
-        //seeCardButton.setClickable(false);
-        //seeCardButton.setEnabled(false);
+        seeCardButton.setClickable(false);
+        seeCardButton.setEnabled(false);
 
         Button changeCard = (Button)findViewById(R.id.button_changeCard);
-        //changeCard.setClickable(false);
-        //changeCard.setEnabled(false);
+        changeCard.setClickable(false);
+        changeCard.setEnabled(false);
 
+        Button buttonFinishRound = (Button)findViewById(R.id.button_finally_round);
+        buttonFinishRound.setClickable(false);
+        buttonFinishRound.setEnabled(false);
 
     }
 
@@ -130,10 +131,14 @@ public class PlateauMascarade extends Activity {
     public void initliazeZeroRound(){
         ArrayList<Player> playerArrayList = bank.getListPlayers();
 
-        Round zeroRound = new Round(0, this, bank, tribunal);
+        Round zeroRound = new Round(0, this, bank, tribunal, newGame);
         for(int i = 0; i < playerArrayList.size() ; i++){
-            Card playerCard = playerArrayList.get(i).getCard();
-            String idCard = Integer.toString(playerArrayList.get(i).getId());
+            Player player = playerArrayList.get(i);
+            if(player.isPlayer()){
+                player.setLastCardKnown(player.getTypeCard());
+            }
+            Card playerCard = player.getCard();
+            String idCard = Integer.toString(player.getId());
             //zeroRound.hideCard(playerCard, idCard, this);
             playerCard.hideCard(idCard, this);
         }
@@ -154,11 +159,11 @@ public class PlateauMascarade extends Activity {
         ArrayList<Round> listRoundsGame = newGame.getListRounds();
         listRoundsGame.add(zeroRound);
         addInstructionOnBoard("Le jeu commence");
-        zeroRound.setButtonChangeCards(false);
-        zeroRound.setButtonFinishRound(false);
-        zeroRound.setButtonAnnounceCard(false);
-        zeroRound.setButtonSeeCard(false);
-        newGame.startGame(this, tribunal);
+        zeroRound.setEnableClickableButtonChangeCards(false);
+        zeroRound.setEnableClickableButtonFinishRound(false);
+        zeroRound.setEnableClickableButtonAnnounceCard(false);
+        zeroRound.setEnableClickableButtonSeeCard(false);
+        newGame.startNewRound(tribunal);
 
     }
 
